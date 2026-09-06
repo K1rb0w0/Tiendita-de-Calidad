@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo de Productos</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --border: #e2e8f0;
+      --badge-bg: #dcfce7;
+      --badge-text: #15803d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding: 2rem 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .search-box {
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .item {
+      background: var(--card-bg);
+      padding: 1.2rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .item-info h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .item-info .stock-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+    }
+
+    .item-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: right;
+    }
+
+    .state-msg {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Catálogo Disponible</h1>
+      <p class="subtitle">Actualizado automáticamente en tiempo real</p>
+    </header>
+
+    <div class="search-box">
+      <input type="text" id="buscador" placeholder="Buscar producto..." />
+    </div>
+
+    <div id="loading" class="state-msg">Cargando productos disponibles...</div>
+    <div id="lista" class="grid"></div>
+    <div id="empty" class="state-msg" style="display: none;">No hay productos con stock disponibles en este momento.</div>
+  </div>
+
+  <!-- PapaParse para procesar CSV de forma robusta -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <script>
+    // REEMPLAZA ESTA URL POR LA URL DE PUBLICACIÓN CSV DE TU GOOGLE SHEET:
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/TU_ID_AQUI/pub?output=csv';
+
+    let productosEnStock = [];
+
+    async function cargarCatalogo() {
+      const loadingEl = document.getElementById('loading');
+      const listaEl = document.getElementById('lista');
+      const emptyEl = document.getElementById('empty');
+
+      try {
+        const respuesta = await fetch(CSV_URL);
+        const csvTexto = await respuesta.text();
+
+        Papa.parse(csvTexto, {
+          header: true,
+          skipEmptyLines: true,
+          complete: function(results) {
+            loadingEl.style.display = 'none';
+
+            // Filtrar productos que tengan Stock válido y mayor a 0
+            productosEnStock = results.data.filter(fila => {
+              const stock = parseInt(fila.Stock || fila.stock || 0, 10);
+              const nombre = fila.Nombre || fila.nombre;
+              return !isNaN(stock) && stock > 0 && Boolean(nombre);
+            });
+
+            renderizarProductos(productosEnStock);
+          },
+          error: function(err) {
+            loadingEl.innerText = 'Error al leer los datos de la hoja.';
+            console.error(err);
+          }
+        });
+      } catch (error) {
+        loadingEl.innerText = 'No se pudo conectar con el catálogo.';
+        console.error(error);
+      }
+    }
+
+    function renderizarProductos(items) {
+      const listaEl = document.getElementById('lista');
+      const emptyEl = document.getElementById('empty');
+      listaEl.innerHTML = '';
+
+      if (items.length === 0) {
+        emptyEl.style.display = 'block';
+        return;
+      }
+
+      emptyEl.style.display = 'none';
+
+      items.forEach(prod => {
+        const nombre = prod.Nombre || prod.nombre;
+        const precio = prod.Precio || prod.precio;
+        const stock = prod.Stock || prod.stock;
+
+        const card = document.createElement('div');
+        card.className = 'item';
+        card.innerHTML = `
+          <div class="item-info">
+            <h3>${nombre}</h3>
+            <span class="stock-badge">Disponible (${stock} unid.)</span>
+          </div>
+          <div class="item-price">${precio}</div>
+        `;
+        listaEl.appendChild(card);
+      });
+    }
+
+    // Filtro buscador en tiempo real
+    document.getElementById('buscador').addEventListener('input', (e) => {
+      const termino = e.target.value.toLowerCase();
+      const filtrados = productosEnStock.filter(item => {
+        const nombre = (item.Nombre || item.nombre || '').toLowerCase();
+        return nombre.includes(termino);
+      });
+      renderizarProductos(filtrados);
+    });
+
+    cargarCatalogo();
+  </script>
+</body>
+</html>
