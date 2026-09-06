@@ -79,7 +79,6 @@
       border-radius: 4px;
     }
 
-    /* Barra fija de categorías */
     .nav-categories {
       position: sticky;
       top: 0;
@@ -118,10 +117,9 @@
       background: var(--card-hover);
     }
 
-    /* Secciones por categoría */
     .section-category {
       margin-bottom: 1.25rem;
-      scroll-margin-top: 45px;
+      scroll-margin-top: 48px;
     }
 
     .category-header {
@@ -146,7 +144,6 @@
       color: var(--text-muted);
     }
 
-    /* Cuadrícula ultra densa */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -212,7 +209,6 @@
       <span id="contador" class="count-tag">-</span>
     </header>
 
-    <!-- Barra de salto rápido entre categorías -->
     <nav id="nav-categorias" class="nav-categories" style="display: none;"></nav>
 
     <div id="loading" class="state-msg">Cargando...</div>
@@ -223,6 +219,14 @@
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=0&single=true&output=csv';
+
+    // Normaliza textos para IDs seguros
+    function sanitizeId(text) {
+      return 'cat-' + text.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, '-');
+    }
 
     async function cargarCatalogo() {
       const loadingEl = document.getElementById('loading');
@@ -238,13 +242,20 @@
         Papa.parse(csvTexto, {
           header: true,
           skipEmptyLines: true,
+          // Normaliza los encabezados quitando tildes, espacios y forzando minúsculas
+          transformHeader: function(h) {
+            return h.trim()
+              .toLowerCase()
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '');
+          },
           complete: function(results) {
             loadingEl.style.display = 'none';
 
-            // Filtrar solo productos con stock > 0 y nombre válido
+            // Filtro de productos con stock > 0
             const itemsValidos = results.data.filter(fila => {
-              const stock = parseInt(fila.Stock || fila.stock || 0, 10);
-              const nombre = (fila.Nombre || fila.nombre || '').trim();
+              const stock = parseInt(fila.stock || 0, 10);
+              const nombre = (fila.nombre || '').trim();
               return !isNaN(stock) && stock > 0 && nombre.length > 0;
             });
 
@@ -255,11 +266,11 @@
               return;
             }
 
-            // Agrupar productos por la columna Categoria
+            // Agrupación de productos por categoría
             const categoriasMap = {};
             itemsValidos.forEach(item => {
-              const catRaw = (item.Categoria || item.categoria || '').trim();
-              const categoria = catRaw.length > 0 ? catRaw : 'Varios';
+              const catRaw = (item.categoria || '').trim();
+              const categoria = catRaw.length > 0 ? catRaw : 'Otros';
 
               if (!categoriasMap[categoria]) {
                 categoriasMap[categoria] = [];
@@ -269,10 +280,10 @@
 
             const listaCategorias = Object.keys(categoriasMap);
 
-            // Renderizar navegación rápida
+            // Barra de acceso rápido
             navEl.innerHTML = '';
             listaCategorias.forEach(cat => {
-              const catId = 'cat-' + encodeURIComponent(cat.toLowerCase().replace(/\s+/g, '-'));
+              const catId = sanitizeId(cat);
               const btn = document.createElement('a');
               btn.className = 'cat-btn';
               btn.href = `#${catId}`;
@@ -281,10 +292,10 @@
             });
             navEl.style.display = 'flex';
 
-            // Renderizar secciones por categoría y sus tarjetas
+            // Secciones y tarjetas
             contenedorEl.innerHTML = '';
             listaCategorias.forEach(cat => {
-              const catId = 'cat-' + encodeURIComponent(cat.toLowerCase().replace(/\s+/g, '-'));
+              const catId = sanitizeId(cat);
               const productos = categoriasMap[cat];
 
               const seccion = document.createElement('section');
@@ -299,10 +310,10 @@
                 <div class="grid" id="grid-${catId}"></div>
               `;
 
-              const grid = seccion.querySelector(`#grid-${CSS.escape(catId)}`);
+              const grid = seccion.querySelector(`#grid-${catId}`);
               productos.forEach(prod => {
-                const nombre = prod.Nombre || prod.nombre;
-                const precio = prod.Precio || prod.precio || '-';
+                const nombre = prod.nombre;
+                const precio = prod.precio || '-';
 
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -319,12 +330,12 @@
             });
           },
           error: function(err) {
-            loadingEl.textContent = 'Error al leer datos.';
+            loadingEl.textContent = 'Error al procesar el archivo.';
             console.error(err);
           }
         });
       } catch (error) {
-        loadingEl.textContent = 'Error de conexión.';
+        loadingEl.textContent = 'Error de conexión con la hoja.';
         console.error(error);
       }
     }
