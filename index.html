@@ -3,113 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catálogo de Productos</title>
+  <title>QA Verified Catalog</title>
   <style>
     :root {
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --primary: #2563eb;
-      --border: #e2e8f0;
-      --badge-bg: #dcfce7;
-      --badge-text: #15803d;
+      --bg-canvas: #0d1117;
+      --card-bg: #161b22;
+      --border-color: #30363d;
+      --text-main: #c9d1d9;
+      --text-muted: #8b949e;
+      --accent-pass: #10b981;
+      --accent-pass-bg: rgba(16, 185, 129, 0.12);
+      --badge-border: rgba(16, 185, 129, 0.35);
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
 
     body {
-      background-color: var(--bg);
+      background-color: var(--bg-canvas);
       color: var(--text-main);
-      padding: 2rem 1rem;
+      font-family: var(--font-sans);
+      padding: 1.5rem 1rem;
       display: flex;
       justify-content: center;
     }
 
     .container {
       width: 100%;
-      max-width: 800px;
+      max-width: 1200px;
     }
 
     header {
-      margin-bottom: 2rem;
-      text-align: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent-pass);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-pass);
+      display: inline-block;
     }
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 1.25rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #f0f6fc;
+    }
+
+    .env-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: #21262d;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* Grid compacta estilo dashboard */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 105px;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .card:hover {
+      border-color: var(--accent-pass);
+      transform: translateY(-2px);
+    }
+
+    .card-top {
       margin-bottom: 0.5rem;
     }
 
-    p.subtitle {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    .search-box {
-      margin-bottom: 1.5rem;
-    }
-
-    .search-box input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .search-box input:focus {
-      border-color: var(--primary);
-    }
-
-    .grid {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .item {
-      background: var(--card-bg);
-      padding: 1.2rem;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
+    .qa-badge {
+      display: inline-flex;
       align-items: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-
-    .item-info h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .item-info .stock-badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: var(--badge-bg);
-      color: var(--badge-text);
-      padding: 0.2rem 0.5rem;
-      border-radius: 12px;
-    }
-
-    .item-price {
-      font-size: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
       font-weight: 700;
-      color: var(--primary);
-      text-align: right;
+      letter-spacing: 0.04em;
+      color: var(--accent-pass);
+      background: var(--accent-pass-bg);
+      border: 1px solid var(--badge-border);
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+    }
+
+    .product-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #f0f6fc;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-top: 1px dashed var(--border-color);
+      padding-top: 0.4rem;
+    }
+
+    .price-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .product-price {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-pass);
     }
 
     .state-msg {
       text-align: center;
-      padding: 2rem;
+      padding: 3rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
   </style>
@@ -118,27 +166,22 @@
 
   <div class="container">
     <header>
-      <h1>Catálogo Disponible</h1>
-      <p class="subtitle">Actualizado automáticamente en tiempo real</p>
+      <div class="brand">
+        <span class="status-dot"></span>
+        <h1>Suite_Catalog // Ready</h1>
+      </div>
+      <span class="env-tag">ENV: PRODUCTION</span>
     </header>
 
-    <div class="search-box">
-      <input type="text" id="buscador" placeholder="Buscar producto..." />
-    </div>
-
-    <div id="loading" class="state-msg">Cargando productos disponibles...</div>
+    <div id="loading" class="state-msg">[EXECUTING]: fetching_dataset.csv ...</div>
     <div id="lista" class="grid"></div>
-    <div id="empty" class="state-msg" style="display: none;">No hay productos con stock disponibles en este momento.</div>
+    <div id="empty" class="state-msg" style="display: none;">[STATUS: 204] - No items in stock.</div>
   </div>
 
-  <!-- PapaParse para procesar CSV de forma robusta -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
   <script>
-    // REEMPLAZA ESTA URL POR LA URL DE PUBLICACIÓN CSV DE TU GOOGLE SHEET:
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=0&single=true&output=csv';
-
-    let productosEnStock = [];
+    // REEMPLAZA CON LA URL DE PUBLICACIÓN CSV DE TU GOOGLE SHEET:
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/TU_ID_AQUI/pub?output=csv';
 
     async function cargarCatalogo() {
       const loadingEl = document.getElementById('loading');
@@ -155,65 +198,48 @@
           complete: function(results) {
             loadingEl.style.display = 'none';
 
-            // Filtrar productos que tengan Stock válido y mayor a 0
-            productosEnStock = results.data.filter(fila => {
+            // Filtro estricto: solo ítems con stock numérico mayor a 0
+            const itemsValidos = results.data.filter(fila => {
               const stock = parseInt(fila.Stock || fila.stock || 0, 10);
               const nombre = fila.Nombre || fila.nombre;
               return !isNaN(stock) && stock > 0 && Boolean(nombre);
             });
 
-            renderizarProductos(productosEnStock);
+            if (itemsValidos.length === 0) {
+              emptyEl.style.display = 'block';
+              return;
+            }
+
+            listaEl.innerHTML = '';
+            itemsValidos.forEach(prod => {
+              const nombre = prod.Nombre || prod.nombre;
+              const precio = prod.Precio || prod.precio || '-';
+
+              const card = document.createElement('div');
+              card.className = 'card';
+              card.innerHTML = `
+                <div class="card-top">
+                  <span class="qa-badge">&#10003; PASS: AVAILABLE</span>
+                  <div class="product-title">${nombre}</div>
+                </div>
+                <div class="card-bottom">
+                  <span class="price-label">PRICE:</span>
+                  <span class="product-price">${precio}</span>
+                </div>
+              `;
+              listaEl.appendChild(card);
+            });
           },
           error: function(err) {
-            loadingEl.innerText = 'Error al leer los datos de la hoja.';
+            loadingEl.innerText = '[FAIL]: Parse error on dataset.';
             console.error(err);
           }
         });
       } catch (error) {
-        loadingEl.innerText = 'No se pudo conectar con el catálogo.';
+        loadingEl.innerText = '[FAIL]: Connection timeout / Network error.';
         console.error(error);
       }
     }
-
-    function renderizarProductos(items) {
-      const listaEl = document.getElementById('lista');
-      const emptyEl = document.getElementById('empty');
-      listaEl.innerHTML = '';
-
-      if (items.length === 0) {
-        emptyEl.style.display = 'block';
-        return;
-      }
-
-      emptyEl.style.display = 'none';
-
-      items.forEach(prod => {
-        const nombre = prod.Nombre || prod.nombre;
-        const precio = prod.Precio || prod.precio;
-        const stock = prod.Stock || prod.stock;
-
-        const card = document.createElement('div');
-        card.className = 'item';
-        card.innerHTML = `
-          <div class="item-info">
-            <h3>${nombre}</h3>
-            <span class="stock-badge">Disponible (${stock} unid.)</span>
-          </div>
-          <div class="item-price">${precio}</div>
-        `;
-        listaEl.appendChild(card);
-      });
-    }
-
-    // Filtro buscador en tiempo real
-    document.getElementById('buscador').addEventListener('input', (e) => {
-      const termino = e.target.value.toLowerCase();
-      const filtrados = productosEnStock.filter(item => {
-        const nombre = (item.Nombre || item.nombre || '').toLowerCase();
-        return nombre.includes(termino);
-      });
-      renderizarProductos(filtrados);
-    });
 
     cargarCatalogo();
   </script>
