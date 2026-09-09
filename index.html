@@ -14,8 +14,10 @@
       --text-main: #e8e3e4;
       --text-muted: #9e8e93;
       --accent: #dc5665;
+      --accent-soft: rgba(220, 86, 101, 0.12);
+      --accent-border: rgba(220, 86, 101, 0.25);
       --accent-gold: #f59e0b;
-      --accent-silver: #94a3b8;
+      --accent-silver: #cbd5e1;
       --accent-bronze: #d97706;
       --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -42,7 +44,6 @@
       max-width: 1300px;
     }
 
-    /* Cabecera con pestañas principales */
     header {
       margin-bottom: 0.8rem;
       padding-bottom: 0.4rem;
@@ -86,14 +87,6 @@
       color: #faf5f6;
     }
 
-    .status-indicator {
-      width: 7px;
-      height: 7px;
-      background-color: var(--accent);
-      border-radius: 50%;
-      box-shadow: 0 0 5px var(--accent);
-    }
-
     .count-tag {
       font-family: var(--font-mono);
       font-size: 0.7rem;
@@ -104,7 +97,6 @@
       border-radius: 4px;
     }
 
-    /* Navegación interna por categorías (solo visible en Catálogo) */
     .nav-categories {
       position: sticky;
       top: 0;
@@ -143,7 +135,6 @@
       background: var(--card-hover);
     }
 
-    /* Vistas principales */
     .view-content {
       display: none;
     }
@@ -152,9 +143,8 @@
       display: block;
     }
 
-    /* Secciones por categoría en Catálogo */
     .section-category {
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.35rem;
       scroll-margin-top: 48px;
     }
 
@@ -162,7 +152,7 @@
       display: flex;
       align-items: baseline;
       gap: 0.5rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.55rem;
       padding-bottom: 0.25rem;
       border-bottom: 1px dashed var(--border);
     }
@@ -180,21 +170,22 @@
       color: var(--text-muted);
     }
 
+    /* Cuadrícula de tarjetas con mayor respiración */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 0.45rem;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.55rem;
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.5rem 0.6rem;
+      border-radius: 5px;
+      padding: 0.6rem 0.65rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 64px;
+      min-height: 72px;
       transition: background-color 0.12s ease, border-color 0.12s ease;
     }
 
@@ -204,35 +195,51 @@
     }
 
     .product-name {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 500;
-      line-height: 1.2;
+      line-height: 1.25;
       color: var(--text-main);
       word-break: break-word;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.5rem;
     }
 
     .card-footer {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      gap: 0.3rem;
+      align-items: center;
+      gap: 0.35rem;
     }
 
-    .product-stock {
+    /* Badge de stock destacado y minimalista */
+    .stock-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.15rem;
       font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--text-muted);
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #fca5a5;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      padding: 0.12rem 0.4rem;
+      border-radius: 4px;
+      line-height: 1;
+    }
+
+    .stock-unit {
+      font-size: 0.58rem;
+      opacity: 0.75;
+      font-weight: 400;
     }
 
     .product-price {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: var(--accent);
     }
 
-    /* Vista Leaderboard independiente */
+    /* Estructura del Leaderboard */
     .leaderboard-container {
       max-width: 550px;
       margin: 0.5rem 0 2rem 0;
@@ -240,7 +247,8 @@
 
     .leaderboard-table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0 0.35rem;
       margin-top: 0.6rem;
       font-size: 0.82rem;
     }
@@ -251,25 +259,39 @@
       font-size: 0.7rem;
       color: var(--text-muted);
       border-bottom: 1px solid var(--border);
-      padding: 0.4rem 0.6rem;
+      padding: 0.4rem 0.75rem;
     }
 
-    .leaderboard-table td {
-      padding: 0.5rem 0.6rem;
-      border-bottom: 1px solid rgba(50, 40, 45, 0.4);
+    .leaderboard-table tr {
+      background: var(--card-bg);
+      transition: background-color 0.15s ease;
+    }
+
+    .leaderboard-table tbody tr td {
+      padding: 0.55rem 0.75rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .leaderboard-table tbody tr td:first-child {
+      border-left: 1px solid var(--border);
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    .leaderboard-table tbody tr td:last-child {
+      border-right: 1px solid var(--border);
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
     }
 
     .rank-cell {
-      width: 45px;
+      width: 50px;
       font-family: var(--font-mono);
       font-weight: 700;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
-
-    .rank-1 { color: var(--accent-gold); }
-    .rank-2 { color: var(--accent-silver); }
-    .rank-3 { color: var(--accent-bronze); }
 
     .leaderboard-name {
       font-weight: 500;
@@ -281,6 +303,37 @@
       font-family: var(--font-mono);
       font-weight: 700;
       color: var(--accent);
+    }
+
+    /* Estilos sutiles y distinguidos para el Top 3 */
+    .row-top-1 {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, var(--card-bg) 100%) !important;
+    }
+    .row-top-1 td:first-child {
+      border-left: 3px solid var(--accent-gold) !important;
+    }
+    .row-top-1 .rank-cell {
+      color: var(--accent-gold);
+    }
+
+    .row-top-2 {
+      background: linear-gradient(90deg, rgba(203, 213, 225, 0.07) 0%, var(--card-bg) 100%) !important;
+    }
+    .row-top-2 td:first-child {
+      border-left: 3px solid var(--accent-silver) !important;
+    }
+    .row-top-2 .rank-cell {
+      color: var(--accent-silver);
+    }
+
+    .row-top-3 {
+      background: linear-gradient(90deg, rgba(217, 119, 6, 0.07) 0%, var(--card-bg) 100%) !important;
+    }
+    .row-top-3 td:first-child {
+      border-left: 3px solid var(--accent-bronze) !important;
+    }
+    .row-top-3 .rank-cell {
+      color: var(--accent-bronze);
     }
 
     .state-msg {
@@ -298,7 +351,6 @@
     <header>
       <nav class="main-tabs">
         <button id="btn-tab-catalogo" class="main-tab-btn active" onclick="cambiarPestana('catalogo')">
-          <span class="status-indicator"></span>
           Catálogo
         </button>
         <button id="btn-tab-leaderboard" class="main-tab-btn" onclick="cambiarPestana('leaderboard')">
@@ -361,7 +413,6 @@
         .replace(/[\u0300-\u036f]/g, '');
     }
 
-    // Limpia y convierte texto con S/, comas, espacios a número flotante válido
     function parseConsumo(valorRaw) {
       if (!valorRaw) return 0;
       const str = String(valorRaw)
@@ -427,7 +478,7 @@
 
         loadingEl.style.display = 'none';
 
-        // 1. Procesar Catálogo
+        // 1. Renderizado de Catálogo
         const itemsValidos = inventarioData.filter(fila => {
           const stock = parseInt(fila.stock || 0, 10);
           const nombre = (fila.nombre || '').trim();
@@ -484,7 +535,7 @@
               card.innerHTML = `
                 <div class="product-name">${prod.nombre}</div>
                 <div class="card-footer">
-                  <span class="product-stock">${prod.stock}u</span>
+                  <span class="stock-pill">${prod.stock}<span class="stock-unit">u</span></span>
                   <span class="product-price">${prod.precio || '-'}</span>
                 </div>
               `;
@@ -495,10 +546,9 @@
           });
         }
 
-        // 2. Procesar Leaderboard (limpieza de consumo y orden)
+        // 2. Renderizado de Leaderboard con empates y top 3 estilizado
         const ranking = (leaderboardData || [])
           .map(r => {
-            // Revisa posibles nombres de columna: consumo, precio, total o saldo
             const valRaw = r.consumo || r.precio || r.total || r.saldo || '';
             return {
               nombre: (r.nombre || '').trim(),
@@ -515,12 +565,29 @@
           emptyLeaderboard.style.display = 'block';
         } else {
           leaderboardBody.innerHTML = '';
+
+          let posicionActual = 1;
+          let ultimoConsumo = null;
+
           ranking.forEach((entry, idx) => {
-            const rank = idx + 1;
-            const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+            // Lógica de empate: si tiene el mismo consumo, comparte la posición
+            if (idx > 0 && entry.consumo === ultimoConsumo) {
+              // Mantiene posicionActual
+            } else {
+              posicionActual = idx + 1;
+            }
+            ultimoConsumo = entry.consumo;
+
+            let filaClase = '';
+            if (posicionActual === 1) filaClase = 'row-top-1';
+            else if (posicionActual === 2) filaClase = 'row-top-2';
+            else if (posicionActual === 3) filaClase = 'row-top-3';
+
             const tr = document.createElement('tr');
+            if (filaClase) tr.className = filaClase;
+
             tr.innerHTML = `
-              <td class="rank-cell ${rankClass}">#${rank}</td>
+              <td class="rank-cell">#${posicionActual}</td>
               <td class="leaderboard-name">${entry.nombre}</td>
               <td class="leaderboard-amount">S/ ${entry.consumo.toFixed(2)}</td>
             `;
