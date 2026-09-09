@@ -133,7 +133,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
-    /* CONTENEDOR DE CATEGORÍAS CON GUÍA DE SCROLL */
+    /* CONTENEDOR DE CATEGORÍAS */
     .nav-wrapper {
       position: sticky;
       top: 0;
@@ -316,7 +316,7 @@
       margin-bottom: 0.65rem;
     }
 
-    /* REDISEÑO DE STOCK EN DOS FORMATOS (NORMAL Y ÚLTIMA UNIDAD) */
+    /* BADGES DE STOCK */
     .stock-indicator {
       display: flex;
       align-items: center;
@@ -380,7 +380,7 @@
       margin-right: 2px;
     }
 
-    /* TABLA LEADERBOARD */
+    /* LEADERBOARD */
     .leaderboard-container {
       max-width: 600px;
       margin: 0.5rem auto 2rem auto;
@@ -458,7 +458,7 @@
       font-size: 0.95rem;
     }
 
-    /* TOP 3 ESTILIZADO */
+    /* TOP 3 RANKING */
     .row-top-1 {
       background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, var(--card-bg) 100%) !important;
     }
@@ -536,7 +536,7 @@
       <div class="leaderboard-container">
         <div class="category-header">
           <div class="category-title-wrap">
-            <h2 class="category-title">Ranking de Clientes</h2>
+            <h2 id="leaderboard-titulo" class="category-title">Ranking de clientes</h2>
           </div>
           <span id="leaderboard-count" class="category-count">0 registrados</span>
         </div>
@@ -560,7 +560,21 @@
     const CSV_INVENTARIO_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=0&single=true&output=csv';
     const CSV_LEADERBOARD_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=2073725424&single=true&output=csv';
 
-    // Genera iconos SVG contextualmente por categoría
+    // Genera el título dinámico: "Ranking de clientes [Mes] [Año]"
+    function configurarTituloFechaLeaderboard() {
+      const fechaActual = new Date();
+      const meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'
+      ];
+      const mesActual = meses[fechaActual.getMonth()];
+      const anioActual = fechaActual.getFullYear();
+      const tituloEl = document.getElementById('leaderboard-titulo');
+      if (tituloEl) {
+        tituloEl.textContent = `Ranking de clientes ${mesActual} ${anioActual}`;
+      }
+    }
+
     function getCategoryIcon(catName) {
       const c = catName.toLowerCase();
       if (c.includes('galleta')) {
@@ -637,6 +651,8 @@
     }
 
     async function inicializar() {
+      configurarTituloFechaLeaderboard();
+
       const loadingEl = document.getElementById('loading');
       const wrapperNav = document.getElementById('wrapper-nav');
       const navEl = document.getElementById('nav-categorias');
@@ -674,7 +690,6 @@
 
           const listaCategorias = Object.keys(categoriasMap);
 
-          // Categorías navegables
           navEl.innerHTML = '';
           listaCategorias.forEach(cat => {
             const catId = sanitizeId(cat);
@@ -686,7 +701,6 @@
           });
           wrapperNav.style.display = 'block';
 
-          // Secciones de categorías y tarjetas
           contenedorEl.innerHTML = '';
           listaCategorias.forEach(cat => {
             const catId = sanitizeId(cat);
@@ -709,7 +723,6 @@
             productos.forEach(prod => {
               const stockNum = parseInt(prod.stock, 10);
               
-              // Rediseño de stock: distinción visual para última unidad vs stock regular
               let stockHTML = '';
               if (stockNum === 1) {
                 stockHTML = `
@@ -750,7 +763,7 @@
           });
         }
 
-        // 2. Render Leaderboard con empates y top 3 estilizado
+        // 2. Render Leaderboard
         const ranking = (leaderboardData || [])
           .map(r => {
             const valRaw = r.consumo || r.precio || r.total || r.saldo || '';
@@ -762,7 +775,7 @@
           .filter(r => r.nombre.length > 0)
           .sort((a, b) => b.consumo - a.consumo);
 
-        leaderboardCount.textContent = `${ranking.length} clientes`;
+        leaderboardCount.textContent = `${ranking.length} registrados`;
 
         if (ranking.length === 0) {
           emptyLeaderboard.style.display = 'block';
@@ -773,7 +786,7 @@
 
           ranking.forEach((entry, idx) => {
             if (idx > 0 && entry.consumo === ultimoMonto) {
-              // Empate mantiene el número de posición
+              // Empate
             } else {
               posActual = idx + 1;
             }
