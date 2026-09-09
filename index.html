@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catálogo & Leaderboard</title>
+  <title>Tiendita de Calidad</title>
   <style>
     :root {
       --bg: #141214;
@@ -42,19 +42,48 @@
       max-width: 1300px;
     }
 
+    /* Cabecera con pestañas principales */
     header {
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.8rem;
       padding-bottom: 0.4rem;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 1rem;
     }
 
-    .title-group {
+    .main-tabs {
       display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .main-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
       align-items: center;
       gap: 0.45rem;
+      transition: all 0.15s ease;
+    }
+
+    .main-tab-btn:hover {
+      color: var(--text-main);
+      background: var(--card-bg);
+    }
+
+    .main-tab-btn.active {
+      background: var(--card-bg);
+      border-color: var(--border-accent);
+      color: #faf5f6;
     }
 
     .status-indicator {
@@ -63,13 +92,6 @@
       background-color: var(--accent);
       border-radius: 50%;
       box-shadow: 0 0 5px var(--accent);
-    }
-
-    h1 {
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      color: #faf5f6;
     }
 
     .count-tag {
@@ -82,6 +104,7 @@
       border-radius: 4px;
     }
 
+    /* Navegación interna por categorías (solo visible en Catálogo) */
     .nav-categories {
       position: sticky;
       top: 0;
@@ -120,11 +143,16 @@
       background: var(--card-hover);
     }
 
-    .cat-btn.highlight {
-      border-color: var(--border-accent);
-      color: var(--accent);
+    /* Vistas principales */
+    .view-content {
+      display: none;
     }
 
+    .view-content.active {
+      display: block;
+    }
+
+    /* Secciones por categoría en Catálogo */
     .section-category {
       margin-bottom: 1.25rem;
       scroll-margin-top: 48px;
@@ -204,19 +232,17 @@
       color: var(--accent);
     }
 
-    .leaderboard-section {
-      margin-top: 2rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-      scroll-margin-top: 48px;
+    /* Vista Leaderboard independiente */
+    .leaderboard-container {
+      max-width: 550px;
+      margin: 0.5rem 0 2rem 0;
     }
 
     .leaderboard-table {
       width: 100%;
-      max-width: 500px;
       border-collapse: collapse;
-      margin-top: 0.5rem;
-      font-size: 0.8rem;
+      margin-top: 0.6rem;
+      font-size: 0.82rem;
     }
 
     .leaderboard-table th {
@@ -229,7 +255,7 @@
     }
 
     .leaderboard-table td {
-      padding: 0.45rem 0.6rem;
+      padding: 0.5rem 0.6rem;
       border-bottom: 1px solid rgba(50, 40, 45, 0.4);
     }
 
@@ -237,7 +263,7 @@
       width: 45px;
       font-family: var(--font-mono);
       font-weight: 700;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
@@ -270,41 +296,56 @@
 
   <div class="container">
     <header>
-      <div class="title-group">
-        <span class="status-indicator"></span>
-        <h1>Catálogo</h1>
-      </div>
-      <span id="contador" class="count-tag">-</span>
+      <nav class="main-tabs">
+        <button id="btn-tab-catalogo" class="main-tab-btn active" onclick="cambiarPestana('catalogo')">
+          <span class="status-indicator"></span>
+          Catálogo
+        </button>
+        <button id="btn-tab-leaderboard" class="main-tab-btn" onclick="cambiarPestana('leaderboard')">
+          Leaderboard
+        </button>
+      </nav>
+      <span id="contador-header" class="count-tag">-</span>
     </header>
 
-    <nav id="nav-categorias" class="nav-categories" style="display: none;"></nav>
+    <div id="loading" class="state-msg">Cargando datos...</div>
 
-    <div id="loading" class="state-msg">Cargando...</div>
-    <div id="contenedor-categorias"></div>
-    <div id="empty" class="state-msg" style="display: none;">Sin productos disponibles.</div>
+    <!-- PESTAÑA 1: CATÁLOGO -->
+    <main id="vista-catalogo" class="view-content active">
+      <nav id="nav-categorias" class="nav-categories" style="display: none;"></nav>
+      <div id="contenedor-categorias"></div>
+      <div id="empty-catalogo" class="state-msg" style="display: none;">Sin productos disponibles.</div>
+    </main>
 
-    <section id="leaderboard" class="leaderboard-section" style="display: none;">
-      <div class="category-header">
-        <h2 class="category-title">Leaderboard Clientes</h2>
-        <span id="leaderboard-count" class="category-count"></span>
+    <!-- PESTAÑA 2: LEADERBOARD -->
+    <main id="vista-leaderboard" class="view-content">
+      <div class="leaderboard-container">
+        <div class="category-header">
+          <h2 class="category-title">Ranking de Clientes</h2>
+          <span id="leaderboard-count" class="category-count">0 clientes</span>
+        </div>
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th class="rank-cell">#</th>
+              <th>Nombre</th>
+              <th style="text-align: right;">Consumo</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body"></tbody>
+        </table>
+        <div id="empty-leaderboard" class="state-msg" style="display: none;">No hay registros de consumo aún.</div>
       </div>
-      <table class="leaderboard-table">
-        <thead>
-          <tr>
-            <th class="rank-cell">#</th>
-            <th>Nombre</th>
-            <th style="text-align: right;">Consumo</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-body"></tbody>
-      </table>
-    </section>
+    </main>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
     const CSV_INVENTARIO_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=0&single=true&output=csv';
     const CSV_LEADERBOARD_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=2073725424&single=true&output=csv';
+
+    let totalProductos = 0;
+    let totalClientes = 0;
 
     function sanitizeId(text) {
       return 'cat-' + text.toLowerCase()
@@ -320,8 +361,42 @@
         .replace(/[\u0300-\u036f]/g, '');
     }
 
-    async function cargarInventario() {
-      const resp = await fetch(CSV_INVENTARIO_URL);
+    // Limpia y convierte texto con S/, comas, espacios a número flotante válido
+    function parseConsumo(valorRaw) {
+      if (!valorRaw) return 0;
+      const str = String(valorRaw)
+        .replace(/S\/\.?/gi, '')
+        .replace(/[$€]/g, '')
+        .replace(/\s+/g, '')
+        .replace(',', '.');
+      const num = parseFloat(str);
+      return isNaN(num) ? 0 : num;
+    }
+
+    function cambiarPestana(pestana) {
+      const btnCat = document.getElementById('btn-tab-catalogo');
+      const btnLead = document.getElementById('btn-tab-leaderboard');
+      const vistaCat = document.getElementById('vista-catalogo');
+      const vistaLead = document.getElementById('vista-leaderboard');
+      const contadorEl = document.getElementById('contador-header');
+
+      if (pestana === 'catalogo') {
+        btnCat.classList.add('active');
+        btnLead.classList.remove('active');
+        vistaCat.classList.add('active');
+        vistaLead.classList.remove('active');
+        contadorEl.textContent = `${totalProductos} items`;
+      } else {
+        btnLead.classList.add('active');
+        btnCat.classList.remove('active');
+        vistaLead.classList.add('active');
+        vistaCat.classList.remove('active');
+        contadorEl.textContent = `${totalClientes} clientes`;
+      }
+    }
+
+    async function cargarCSV(url) {
+      const resp = await fetch(url);
       const csv = await resp.text();
       return new Promise((resolve, reject) => {
         Papa.parse(csv, {
@@ -334,54 +409,36 @@
       });
     }
 
-    async function cargarLeaderboard() {
-      try {
-        const resp = await fetch(CSV_LEADERBOARD_URL);
-        if (!resp.ok) return [];
-        const csv = await resp.text();
-        return new Promise((resolve) => {
-          Papa.parse(csv, {
-            header: true,
-            skipEmptyLines: true,
-            transformHeader: normalizarHeader,
-            complete: results => resolve(results.data),
-            error: () => resolve([])
-          });
-        });
-      } catch (e) {
-        return [];
-      }
-    }
-
     async function inicializar() {
       const loadingEl = document.getElementById('loading');
-      const emptyEl = document.getElementById('empty');
-      const contadorEl = document.getElementById('contador');
+      const contadorEl = document.getElementById('contador-header');
       const navEl = document.getElementById('nav-categorias');
       const contenedorEl = document.getElementById('contenedor-categorias');
-      const leaderboardSec = document.getElementById('leaderboard');
+      const emptyCatalogo = document.getElementById('empty-catalogo');
       const leaderboardBody = document.getElementById('leaderboard-body');
       const leaderboardCount = document.getElementById('leaderboard-count');
+      const emptyLeaderboard = document.getElementById('empty-leaderboard');
 
       try {
         const [inventarioData, leaderboardData] = await Promise.all([
-          cargarInventario(),
-          cargarLeaderboard()
+          cargarCSV(CSV_INVENTARIO_URL),
+          cargarCSV(CSV_LEADERBOARD_URL).catch(() => [])
         ]);
 
         loadingEl.style.display = 'none';
 
-        // 1. Renderizado de Inventario
+        // 1. Procesar Catálogo
         const itemsValidos = inventarioData.filter(fila => {
           const stock = parseInt(fila.stock || 0, 10);
           const nombre = (fila.nombre || '').trim();
           return !isNaN(stock) && stock > 0 && nombre.length > 0;
         });
 
-        contadorEl.textContent = `${itemsValidos.length}`;
+        totalProductos = itemsValidos.length;
+        contadorEl.textContent = `${totalProductos} items`;
 
-        if (itemsValidos.length === 0) {
-          emptyEl.style.display = 'block';
+        if (totalProductos === 0) {
+          emptyCatalogo.style.display = 'block';
         } else {
           const categoriasMap = {};
           itemsValidos.forEach(item => {
@@ -402,6 +459,7 @@
             btn.textContent = cat;
             navEl.appendChild(btn);
           });
+          navEl.style.display = 'flex';
 
           contenedorEl.innerHTML = '';
           listaCategorias.forEach(cat => {
@@ -411,7 +469,6 @@
             const seccion = document.createElement('section');
             seccion.className = 'section-category';
             seccion.id = catId;
-
             seccion.innerHTML = `
               <div class="category-header">
                 <h2 class="category-title">${cat}</h2>
@@ -438,16 +495,25 @@
           });
         }
 
-        // 2. Renderizado de Leaderboard
-        const ranking = leaderboardData
-          .map(r => ({
-            nombre: (r.nombre || '').trim(),
-            consumo: parseFloat(r.consumo || 0)
-          }))
+        // 2. Procesar Leaderboard (limpieza de consumo y orden)
+        const ranking = (leaderboardData || [])
+          .map(r => {
+            // Revisa posibles nombres de columna: consumo, precio, total o saldo
+            const valRaw = r.consumo || r.precio || r.total || r.saldo || '';
+            return {
+              nombre: (r.nombre || '').trim(),
+              consumo: parseConsumo(valRaw)
+            };
+          })
           .filter(r => r.nombre.length > 0)
           .sort((a, b) => b.consumo - a.consumo);
 
-        if (ranking.length > 0) {
+        totalClientes = ranking.length;
+        leaderboardCount.textContent = `${totalClientes} clientes`;
+
+        if (totalClientes === 0) {
+          emptyLeaderboard.style.display = 'block';
+        } else {
           leaderboardBody.innerHTML = '';
           ranking.forEach((entry, idx) => {
             const rank = idx + 1;
@@ -460,19 +526,6 @@
             `;
             leaderboardBody.appendChild(tr);
           });
-
-          leaderboardCount.textContent = `${ranking.length} clientes`;
-          leaderboardSec.style.display = 'block';
-
-          const btnLeaderboard = document.createElement('a');
-          btnLeaderboard.className = 'cat-btn highlight';
-          btnLeaderboard.href = '#leaderboard';
-          btnLeaderboard.textContent = '★ Leaderboard';
-          navEl.appendChild(btnLeaderboard);
-        }
-
-        if (navEl.children.length > 0) {
-          navEl.style.display = 'flex';
         }
 
       } catch (err) {
