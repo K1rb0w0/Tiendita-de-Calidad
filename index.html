@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catálogo</title>
+  <title>Catálogo & Leaderboard</title>
   <style>
     :root {
       --bg: #141214;
@@ -14,6 +14,9 @@
       --text-main: #e8e3e4;
       --text-muted: #9e8e93;
       --accent: #dc5665;
+      --accent-gold: #f59e0b;
+      --accent-silver: #94a3b8;
+      --accent-bronze: #d97706;
       --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
@@ -117,6 +120,11 @@
       background: var(--card-hover);
     }
 
+    .cat-btn.highlight {
+      border-color: var(--border-accent);
+      color: var(--accent);
+    }
+
     .section-category {
       margin-bottom: 1.25rem;
       scroll-margin-top: 48px;
@@ -178,13 +186,73 @@
 
     .card-footer {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: baseline;
+      gap: 0.3rem;
+    }
+
+    .product-stock {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
     }
 
     .product-price {
       font-family: var(--font-mono);
       font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .leaderboard-section {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      scroll-margin-top: 48px;
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      max-width: 500px;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .leaderboard-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      padding: 0.4rem 0.6rem;
+    }
+
+    .leaderboard-table td {
+      padding: 0.45rem 0.6rem;
+      border-bottom: 1px solid rgba(50, 40, 45, 0.4);
+    }
+
+    .rank-cell {
+      width: 45px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .rank-1 { color: var(--accent-gold); }
+    .rank-2 { color: var(--accent-silver); }
+    .rank-3 { color: var(--accent-bronze); }
+
+    .leaderboard-name {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .leaderboard-amount {
+      text-align: right;
+      font-family: var(--font-mono);
       font-weight: 700;
       color: var(--accent);
     }
@@ -214,13 +282,30 @@
     <div id="loading" class="state-msg">Cargando...</div>
     <div id="contenedor-categorias"></div>
     <div id="empty" class="state-msg" style="display: none;">Sin productos disponibles.</div>
+
+    <section id="leaderboard" class="leaderboard-section" style="display: none;">
+      <div class="category-header">
+        <h2 class="category-title">Leaderboard Clientes</h2>
+        <span id="leaderboard-count" class="category-count"></span>
+      </div>
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th class="rank-cell">#</th>
+            <th>Nombre</th>
+            <th style="text-align: right;">Consumo</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+    </section>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=0&single=true&output=csv';
+    const CSV_INVENTARIO_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=0&single=true&output=csv';
+    const CSV_LEADERBOARD_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=2073725424&single=true&output=csv';
 
-    // Normaliza textos para IDs seguros
     function sanitizeId(text) {
       return 'cat-' + text.toLowerCase()
         .normalize('NFD')
@@ -228,119 +313,175 @@
         .replace(/[^a-z0-9]/g, '-');
     }
 
-    async function cargarCatalogo() {
+    function normalizarHeader(h) {
+      return h.trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    async function cargarInventario() {
+      const resp = await fetch(CSV_INVENTARIO_URL);
+      const csv = await resp.text();
+      return new Promise((resolve, reject) => {
+        Papa.parse(csv, {
+          header: true,
+          skipEmptyLines: true,
+          transformHeader: normalizarHeader,
+          complete: results => resolve(results.data),
+          error: reject
+        });
+      });
+    }
+
+    async function cargarLeaderboard() {
+      try {
+        const resp = await fetch(CSV_LEADERBOARD_URL);
+        if (!resp.ok) return [];
+        const csv = await resp.text();
+        return new Promise((resolve) => {
+          Papa.parse(csv, {
+            header: true,
+            skipEmptyLines: true,
+            transformHeader: normalizarHeader,
+            complete: results => resolve(results.data),
+            error: () => resolve([])
+          });
+        });
+      } catch (e) {
+        return [];
+      }
+    }
+
+    async function inicializar() {
       const loadingEl = document.getElementById('loading');
       const emptyEl = document.getElementById('empty');
       const contadorEl = document.getElementById('contador');
       const navEl = document.getElementById('nav-categorias');
       const contenedorEl = document.getElementById('contenedor-categorias');
+      const leaderboardSec = document.getElementById('leaderboard');
+      const leaderboardBody = document.getElementById('leaderboard-body');
+      const leaderboardCount = document.getElementById('leaderboard-count');
 
       try {
-        const respuesta = await fetch(CSV_URL);
-        const csvTexto = await respuesta.text();
+        const [inventarioData, leaderboardData] = await Promise.all([
+          cargarInventario(),
+          cargarLeaderboard()
+        ]);
 
-        Papa.parse(csvTexto, {
-          header: true,
-          skipEmptyLines: true,
-          // Normaliza los encabezados quitando tildes, espacios y forzando minúsculas
-          transformHeader: function(h) {
-            return h.trim()
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '');
-          },
-          complete: function(results) {
-            loadingEl.style.display = 'none';
+        loadingEl.style.display = 'none';
 
-            // Filtro de productos con stock > 0
-            const itemsValidos = results.data.filter(fila => {
-              const stock = parseInt(fila.stock || 0, 10);
-              const nombre = (fila.nombre || '').trim();
-              return !isNaN(stock) && stock > 0 && nombre.length > 0;
-            });
-
-            contadorEl.textContent = `${itemsValidos.length}`;
-
-            if (itemsValidos.length === 0) {
-              emptyEl.style.display = 'block';
-              return;
-            }
-
-            // Agrupación de productos por categoría
-            const categoriasMap = {};
-            itemsValidos.forEach(item => {
-              const catRaw = (item.categoria || '').trim();
-              const categoria = catRaw.length > 0 ? catRaw : 'Otros';
-
-              if (!categoriasMap[categoria]) {
-                categoriasMap[categoria] = [];
-              }
-              categoriasMap[categoria].push(item);
-            });
-
-            const listaCategorias = Object.keys(categoriasMap);
-
-            // Barra de acceso rápido
-            navEl.innerHTML = '';
-            listaCategorias.forEach(cat => {
-              const catId = sanitizeId(cat);
-              const btn = document.createElement('a');
-              btn.className = 'cat-btn';
-              btn.href = `#${catId}`;
-              btn.textContent = cat;
-              navEl.appendChild(btn);
-            });
-            navEl.style.display = 'flex';
-
-            // Secciones y tarjetas
-            contenedorEl.innerHTML = '';
-            listaCategorias.forEach(cat => {
-              const catId = sanitizeId(cat);
-              const productos = categoriasMap[cat];
-
-              const seccion = document.createElement('section');
-              seccion.className = 'section-category';
-              seccion.id = catId;
-
-              seccion.innerHTML = `
-                <div class="category-header">
-                  <h2 class="category-title">${cat}</h2>
-                  <span class="category-count">${productos.length}</span>
-                </div>
-                <div class="grid" id="grid-${catId}"></div>
-              `;
-
-              const grid = seccion.querySelector(`#grid-${catId}`);
-              productos.forEach(prod => {
-                const nombre = prod.nombre;
-                const precio = prod.precio || '-';
-
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                  <div class="product-name">${nombre}</div>
-                  <div class="card-footer">
-                    <span class="product-price">${precio}</span>
-                  </div>
-                `;
-                grid.appendChild(card);
-              });
-
-              contenedorEl.appendChild(seccion);
-            });
-          },
-          error: function(err) {
-            loadingEl.textContent = 'Error al procesar el archivo.';
-            console.error(err);
-          }
+        // 1. Renderizado de Inventario
+        const itemsValidos = inventarioData.filter(fila => {
+          const stock = parseInt(fila.stock || 0, 10);
+          const nombre = (fila.nombre || '').trim();
+          return !isNaN(stock) && stock > 0 && nombre.length > 0;
         });
-      } catch (error) {
-        loadingEl.textContent = 'Error de conexión con la hoja.';
-        console.error(error);
+
+        contadorEl.textContent = `${itemsValidos.length}`;
+
+        if (itemsValidos.length === 0) {
+          emptyEl.style.display = 'block';
+        } else {
+          const categoriasMap = {};
+          itemsValidos.forEach(item => {
+            const catRaw = (item.categoria || '').trim();
+            const categoria = catRaw.length > 0 ? catRaw : 'Otros';
+            if (!categoriasMap[categoria]) categoriasMap[categoria] = [];
+            categoriasMap[categoria].push(item);
+          });
+
+          const listaCategorias = Object.keys(categoriasMap);
+
+          navEl.innerHTML = '';
+          listaCategorias.forEach(cat => {
+            const catId = sanitizeId(cat);
+            const btn = document.createElement('a');
+            btn.className = 'cat-btn';
+            btn.href = `#${catId}`;
+            btn.textContent = cat;
+            navEl.appendChild(btn);
+          });
+
+          contenedorEl.innerHTML = '';
+          listaCategorias.forEach(cat => {
+            const catId = sanitizeId(cat);
+            const productos = categoriasMap[cat];
+
+            const seccion = document.createElement('section');
+            seccion.className = 'section-category';
+            seccion.id = catId;
+
+            seccion.innerHTML = `
+              <div class="category-header">
+                <h2 class="category-title">${cat}</h2>
+                <span class="category-count">${productos.length}</span>
+              </div>
+              <div class="grid" id="grid-${catId}"></div>
+            `;
+
+            const grid = seccion.querySelector(`#grid-${catId}`);
+            productos.forEach(prod => {
+              const card = document.createElement('div');
+              card.className = 'card';
+              card.innerHTML = `
+                <div class="product-name">${prod.nombre}</div>
+                <div class="card-footer">
+                  <span class="product-stock">${prod.stock}u</span>
+                  <span class="product-price">${prod.precio || '-'}</span>
+                </div>
+              `;
+              grid.appendChild(card);
+            });
+
+            contenedorEl.appendChild(seccion);
+          });
+        }
+
+        // 2. Renderizado de Leaderboard
+        const ranking = leaderboardData
+          .map(r => ({
+            nombre: (r.nombre || '').trim(),
+            consumo: parseFloat(r.consumo || 0)
+          }))
+          .filter(r => r.nombre.length > 0)
+          .sort((a, b) => b.consumo - a.consumo);
+
+        if (ranking.length > 0) {
+          leaderboardBody.innerHTML = '';
+          ranking.forEach((entry, idx) => {
+            const rank = idx + 1;
+            const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td class="rank-cell ${rankClass}">#${rank}</td>
+              <td class="leaderboard-name">${entry.nombre}</td>
+              <td class="leaderboard-amount">S/ ${entry.consumo.toFixed(2)}</td>
+            `;
+            leaderboardBody.appendChild(tr);
+          });
+
+          leaderboardCount.textContent = `${ranking.length} clientes`;
+          leaderboardSec.style.display = 'block';
+
+          const btnLeaderboard = document.createElement('a');
+          btnLeaderboard.className = 'cat-btn highlight';
+          btnLeaderboard.href = '#leaderboard';
+          btnLeaderboard.textContent = '★ Leaderboard';
+          navEl.appendChild(btnLeaderboard);
+        }
+
+        if (navEl.children.length > 0) {
+          navEl.style.display = 'flex';
+        }
+
+      } catch (err) {
+        loadingEl.textContent = 'Error al cargar los datos.';
+        console.error(err);
       }
     }
 
-    cargarCatalogo();
+    inicializar();
   </script>
 </body>
 </html>
