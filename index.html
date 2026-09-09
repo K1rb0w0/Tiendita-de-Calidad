@@ -6,16 +6,21 @@
   <title>Tiendita de Calidad</title>
   <style>
     :root {
-      --bg: #141214;
-      --card-bg: #1c181b;
-      --card-hover: #241e22;
-      --border: #32282d;
-      --border-accent: #7c2d37;
-      --text-main: #e8e3e4;
-      --text-muted: #9e8e93;
-      --accent: #dc5665;
-      --accent-soft: rgba(220, 86, 101, 0.12);
-      --accent-border: rgba(220, 86, 101, 0.25);
+      --bg: #0f0d10;
+      --card-bg: #181417;
+      --card-bg-hover: #211a1f;
+      --card-inner: #130f12;
+      --border: #2f2328;
+      --border-accent: #8b2635;
+      --text-main: #f5f0f2;
+      --text-muted: #a39298;
+      --accent: #e63946;
+      --accent-glow: rgba(230, 57, 70, 0.25);
+      --accent-soft: rgba(230, 57, 70, 0.12);
+      --pass-green: #10b981;
+      --pass-soft: rgba(16, 185, 129, 0.15);
+      --alert-orange: #f59e0b;
+      --alert-soft: rgba(245, 158, 11, 0.15);
       --accent-gold: #f59e0b;
       --accent-silver: #cbd5e1;
       --accent-bronze: #d97706;
@@ -32,11 +37,15 @@
 
     body {
       background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(139, 38, 53, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(230, 57, 70, 0.08) 0%, transparent 45%);
       color: var(--text-main);
       font-family: var(--font-sans);
-      padding: 1rem 0.75rem;
+      padding: 1.25rem 0.85rem;
       display: flex;
       justify-content: center;
+      min-height: 100vh;
     }
 
     .container {
@@ -44,303 +53,441 @@
       max-width: 1300px;
     }
 
+    /* HEADER */
     header {
-      margin-bottom: 0.8rem;
-      padding-bottom: 0.4rem;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.75rem;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--accent), #7c1a22);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .brand-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2.2;
     }
 
     .main-tabs {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.5rem;
       align-items: center;
+      background: rgba(24, 20, 23, 0.8);
+      padding: 0.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
     }
 
     .main-tab-btn {
       background: transparent;
-      border: 1px solid transparent;
+      border: none;
       color: var(--text-muted);
       font-family: var(--font-sans);
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 600;
-      padding: 0.35rem 0.75rem;
+      padding: 0.4rem 0.9rem;
       border-radius: 6px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
+    }
+
+    .main-tab-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
     }
 
     .main-tab-btn:hover {
       color: var(--text-main);
-      background: var(--card-bg);
     }
 
     .main-tab-btn.active {
-      background: var(--card-bg);
-      border-color: var(--border-accent);
-      color: #faf5f6;
+      background: linear-gradient(135deg, #2b1f24, #1f171b);
+      border: 1px solid var(--border-accent);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
-    .count-tag {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
+    /* CONTENEDOR DE CATEGORÍAS CON GUÍA DE SCROLL */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 25;
+      background: rgba(15, 13, 16, 0.95);
+      backdrop-filter: blur(8px);
+      margin-bottom: 1.25rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(47, 35, 40, 0.6);
+    }
+
+    .scroll-hint-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.68rem;
       color: var(--text-muted);
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
+      font-family: var(--font-mono);
+      margin-bottom: 0.35rem;
+      padding: 0 0.2rem;
+    }
+
+    .scroll-hint-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--accent);
+      animation: pulseText 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseText {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; transform: translateX(2px); }
     }
 
     .nav-categories {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background-color: rgba(20, 18, 20, 0.95);
-      backdrop-filter: blur(6px);
-      padding: 0.45rem 0;
-      margin-bottom: 1rem;
       display: flex;
-      gap: 0.4rem;
+      gap: 0.5rem;
       overflow-x: auto;
-      border-bottom: 1px solid rgba(50, 40, 45, 0.6);
-      scrollbar-width: none;
+      padding-bottom: 0.3rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-accent) transparent;
     }
 
     .nav-categories::-webkit-scrollbar {
-      display: none;
+      height: 4px;
+    }
+    .nav-categories::-webkit-scrollbar-thumb {
+      background: var(--border-accent);
+      border-radius: 4px;
     }
 
     .cat-btn {
-      font-size: 0.72rem;
+      font-size: 0.76rem;
       font-weight: 500;
       color: var(--text-muted);
       background: var(--card-bg);
       border: 1px solid var(--border);
-      padding: 0.25rem 0.6rem;
-      border-radius: 14px;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
       text-decoration: none;
       white-space: nowrap;
-      transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+    }
+
+    .cat-btn svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
     }
 
     .cat-btn:hover {
-      color: var(--text-main);
-      border-color: var(--border-accent);
-      background: var(--card-hover);
+      color: #fff;
+      border-color: var(--accent);
+      background: var(--card-bg-hover);
+      transform: translateY(-1px);
     }
 
     .view-content {
       display: none;
     }
-
     .view-content.active {
       display: block;
     }
 
+    /* SECCIÓN DE PRODUCTOS */
     .section-category {
-      margin-bottom: 1.35rem;
-      scroll-margin-top: 48px;
+      margin-bottom: 1.8rem;
+      scroll-margin-top: 85px;
     }
 
     .category-header {
       display: flex;
-      align-items: baseline;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .category-title-wrap {
+      display: flex;
+      align-items: center;
       gap: 0.5rem;
-      margin-bottom: 0.55rem;
-      padding-bottom: 0.25rem;
-      border-bottom: 1px dashed var(--border);
     }
 
     .category-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #faf5f6;
-      letter-spacing: 0.02em;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.01em;
     }
 
     .category-count {
       font-family: var(--font-mono);
       font-size: 0.68rem;
-      color: var(--text-muted);
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--border-accent);
+      padding: 0.1rem 0.45rem;
+      border-radius: 10px;
     }
 
-    /* Cuadrícula de tarjetas con mayor respiración */
+    /* CUADRÍCULA DE PRODUCTOS */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 0.55rem;
+      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+      gap: 0.75rem;
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 0.6rem 0.65rem;
+      border-radius: 8px;
+      padding: 0.8rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 72px;
-      transition: background-color 0.12s ease, border-color 0.12s ease;
+      min-height: 110px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
 
     .card:hover {
-      background: var(--card-hover);
+      background: var(--card-bg-hover);
       border-color: var(--border-accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    }
+
+    .card:hover::before {
+      opacity: 1;
     }
 
     .product-name {
-      font-size: 0.8rem;
-      font-weight: 500;
-      line-height: 1.25;
+      font-size: 0.86rem;
+      font-weight: 600;
+      line-height: 1.3;
       color: var(--text-main);
       word-break: break-word;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.65rem;
+    }
+
+    /* REDISEÑO DE STOCK EN DOS FORMATOS (NORMAL Y ÚLTIMA UNIDAD) */
+    .stock-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      width: fit-content;
+      margin-bottom: 0.65rem;
+    }
+
+    .stock-normal {
+      background: var(--pass-soft);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--pass-green);
+    }
+
+    .stock-low {
+      background: var(--alert-soft);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: var(--alert-orange);
+    }
+
+    .stock-indicator svg {
+      width: 11px;
+      height: 11px;
+      stroke-width: 2.5;
+      stroke: currentColor;
+      fill: none;
     }
 
     .card-footer {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 0.35rem;
+      align-items: flex-end;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 0.45rem;
     }
 
-    /* Badge de stock destacado y minimalista */
-    .stock-pill {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 0.15rem;
+    .price-label {
+      font-size: 0.62rem;
+      color: var(--text-muted);
       font-family: var(--font-mono);
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: #fca5a5;
-      background: var(--accent-soft);
-      border: 1px solid var(--accent-border);
-      padding: 0.12rem 0.4rem;
-      border-radius: 4px;
-      line-height: 1;
-    }
-
-    .stock-unit {
-      font-size: 0.58rem;
-      opacity: 0.75;
-      font-weight: 400;
+      text-transform: uppercase;
+      margin-bottom: 0.1rem;
     }
 
     .product-price {
       font-family: var(--font-mono);
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--accent);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
     }
 
-    /* Estructura del Leaderboard */
+    .currency-symbol {
+      color: var(--accent);
+      font-size: 0.78rem;
+      margin-right: 2px;
+    }
+
+    /* TABLA LEADERBOARD */
     .leaderboard-container {
-      max-width: 550px;
-      margin: 0.5rem 0 2rem 0;
+      max-width: 600px;
+      margin: 0.5rem auto 2rem auto;
     }
 
     .leaderboard-table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 0 0.35rem;
-      margin-top: 0.6rem;
-      font-size: 0.82rem;
+      border-spacing: 0 0.4rem;
+      margin-top: 0.8rem;
+      font-size: 0.86rem;
     }
 
     .leaderboard-table th {
       text-align: left;
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-      padding: 0.4rem 0.75rem;
+      padding: 0.4rem 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
-    .leaderboard-table tr {
+    .leaderboard-table tbody tr {
       background: var(--card-bg);
-      transition: background-color 0.15s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      transition: all 0.15s ease;
     }
 
     .leaderboard-table tbody tr td {
-      padding: 0.55rem 0.75rem;
+      padding: 0.65rem 0.8rem;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
 
     .leaderboard-table tbody tr td:first-child {
       border-left: 1px solid var(--border);
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
     }
 
     .leaderboard-table tbody tr td:last-child {
       border-right: 1px solid var(--border);
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
     }
 
     .rank-cell {
-      width: 50px;
+      width: 55px;
       font-family: var(--font-mono);
-      font-weight: 700;
-      font-size: 0.8rem;
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
       color: var(--text-muted);
     }
 
+    .rank-cell svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
     .leaderboard-name {
-      font-weight: 500;
-      color: var(--text-main);
+      font-weight: 600;
+      color: #fff;
     }
 
     .leaderboard-amount {
       text-align: right;
       font-family: var(--font-mono);
-      font-weight: 700;
+      font-weight: 800;
       color: var(--accent);
+      font-size: 0.95rem;
     }
 
-    /* Estilos sutiles y distinguidos para el Top 3 */
+    /* TOP 3 ESTILIZADO */
     .row-top-1 {
-      background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, var(--card-bg) 100%) !important;
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, var(--card-bg) 100%) !important;
     }
     .row-top-1 td:first-child {
       border-left: 3px solid var(--accent-gold) !important;
     }
-    .row-top-1 .rank-cell {
-      color: var(--accent-gold);
-    }
+    .row-top-1 .rank-cell { color: var(--accent-gold); }
 
     .row-top-2 {
-      background: linear-gradient(90deg, rgba(203, 213, 225, 0.07) 0%, var(--card-bg) 100%) !important;
+      background: linear-gradient(90deg, rgba(203, 213, 225, 0.1) 0%, var(--card-bg) 100%) !important;
     }
     .row-top-2 td:first-child {
       border-left: 3px solid var(--accent-silver) !important;
     }
-    .row-top-2 .rank-cell {
-      color: var(--accent-silver);
-    }
+    .row-top-2 .rank-cell { color: var(--accent-silver); }
 
     .row-top-3 {
-      background: linear-gradient(90deg, rgba(217, 119, 6, 0.07) 0%, var(--card-bg) 100%) !important;
+      background: linear-gradient(90deg, rgba(217, 119, 6, 0.1) 0%, var(--card-bg) 100%) !important;
     }
     .row-top-3 td:first-child {
       border-left: 3px solid var(--accent-bronze) !important;
     }
-    .row-top-3 .rank-cell {
-      color: var(--accent-bronze);
-    }
+    .row-top-3 .rank-cell { color: var(--accent-bronze); }
 
     .state-msg {
       text-align: center;
-      padding: 2.5rem 1rem;
+      padding: 3rem 1rem;
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
   </style>
@@ -349,44 +496,61 @@
 
   <div class="container">
     <header>
-      <nav class="main-tabs">
-        <button id="btn-tab-catalogo" class="main-tab-btn active" onclick="cambiarPestana('catalogo')">
-          Catálogo
-        </button>
-        <button id="btn-tab-leaderboard" class="main-tab-btn" onclick="cambiarPestana('leaderboard')">
-          Leaderboard
-        </button>
-      </nav>
-      <span id="contador-header" class="count-tag">-</span>
+      <div class="brand-title">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <nav class="main-tabs">
+          <button id="btn-tab-catalogo" class="main-tab-btn active" onclick="cambiarPestana('catalogo')">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Catálogo
+          </button>
+          <button id="btn-tab-leaderboard" class="main-tab-btn" onclick="cambiarPestana('leaderboard')">
+            <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7"></path><path d="M14 14.66V17c0 .55.45 1 1 1h2"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+            Leaderboard
+          </button>
+        </nav>
+      </div>
     </header>
 
-    <div id="loading" class="state-msg">Cargando datos...</div>
+    <div id="loading" class="state-msg">Cargando datos verificados...</div>
 
-    <!-- PESTAÑA 1: CATÁLOGO -->
+    <!-- PESTAÑA CATÁLOGO -->
     <main id="vista-catalogo" class="view-content active">
-      <nav id="nav-categorias" class="nav-categories" style="display: none;"></nav>
+      <div class="nav-wrapper" id="wrapper-nav" style="display: none;">
+        <div class="scroll-hint-bar">
+          <span>CATEGORÍAS</span>
+          <span class="scroll-hint-icon">
+            desliza para explorar &rarr;
+          </span>
+        </div>
+        <nav id="nav-categorias" class="nav-categories"></nav>
+      </div>
+
       <div id="contenedor-categorias"></div>
-      <div id="empty-catalogo" class="state-msg" style="display: none;">Sin productos disponibles.</div>
+      <div id="empty-catalogo" class="state-msg" style="display: none;">No hay productos con stock disponibles.</div>
     </main>
 
-    <!-- PESTAÑA 2: LEADERBOARD -->
+    <!-- PESTAÑA LEADERBOARD -->
     <main id="vista-leaderboard" class="view-content">
       <div class="leaderboard-container">
         <div class="category-header">
-          <h2 class="category-title">Ranking de Clientes</h2>
-          <span id="leaderboard-count" class="category-count">0 clientes</span>
+          <div class="category-title-wrap">
+            <h2 class="category-title">Ranking de Clientes</h2>
+          </div>
+          <span id="leaderboard-count" class="category-count">0 registrados</span>
         </div>
         <table class="leaderboard-table">
           <thead>
             <tr>
-              <th class="rank-cell">#</th>
-              <th>Nombre</th>
-              <th style="text-align: right;">Consumo</th>
+              <th style="width: 55px;">#</th>
+              <th>Cliente</th>
+              <th style="text-align: right;">Consumo Total</th>
             </tr>
           </thead>
           <tbody id="leaderboard-body"></tbody>
         </table>
-        <div id="empty-leaderboard" class="state-msg" style="display: none;">No hay registros de consumo aún.</div>
+        <div id="empty-leaderboard" class="state-msg" style="display: none;">No hay registros de consumo actualmente.</div>
       </div>
     </main>
   </div>
@@ -396,8 +560,23 @@
     const CSV_INVENTARIO_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=0&single=true&output=csv';
     const CSV_LEADERBOARD_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=2073725424&single=true&output=csv';
 
-    let totalProductos = 0;
-    let totalClientes = 0;
+    // Genera iconos SVG contextualmente por categoría
+    function getCategoryIcon(catName) {
+      const c = catName.toLowerCase();
+      if (c.includes('galleta')) {
+        return `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="8.5" cy="8.5" r="1.5"></circle><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="10" cy="14" r="1"></circle><circle cx="14.5" cy="14.5" r="1.5"></circle></svg>`;
+      }
+      if (c.includes('bebida')) {
+        return `<svg viewBox="0 0 24 24"><path d="M18 2h-12a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-16a2 2 0 0 0-2-2z"></path><line x1="12" y1="6" x2="12" y2="10"></line><circle cx="12" cy="15" r="2"></circle></svg>`;
+      }
+      if (c.includes('dulce')) {
+        return `<svg viewBox="0 0 24 24"><path d="m16 8 5-5"></path><path d="m8 16-5 5"></path><circle cx="12" cy="12" r="6"></circle></svg>`;
+      }
+      if (c.includes('piqueo')) {
+        return `<svg viewBox="0 0 24 24"><polygon points="12 2 2 22 22 22 12 2"></polygon></svg>`;
+      }
+      return `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+    }
 
     function sanitizeId(text) {
       return 'cat-' + text.toLowerCase()
@@ -429,20 +608,17 @@
       const btnLead = document.getElementById('btn-tab-leaderboard');
       const vistaCat = document.getElementById('vista-catalogo');
       const vistaLead = document.getElementById('vista-leaderboard');
-      const contadorEl = document.getElementById('contador-header');
 
       if (pestana === 'catalogo') {
         btnCat.classList.add('active');
         btnLead.classList.remove('active');
         vistaCat.classList.add('active');
         vistaLead.classList.remove('active');
-        contadorEl.textContent = `${totalProductos} items`;
       } else {
         btnLead.classList.add('active');
         btnCat.classList.remove('active');
         vistaLead.classList.add('active');
         vistaCat.classList.remove('active');
-        contadorEl.textContent = `${totalClientes} clientes`;
       }
     }
 
@@ -462,7 +638,7 @@
 
     async function inicializar() {
       const loadingEl = document.getElementById('loading');
-      const contadorEl = document.getElementById('contador-header');
+      const wrapperNav = document.getElementById('wrapper-nav');
       const navEl = document.getElementById('nav-categorias');
       const contenedorEl = document.getElementById('contenedor-categorias');
       const emptyCatalogo = document.getElementById('empty-catalogo');
@@ -478,17 +654,14 @@
 
         loadingEl.style.display = 'none';
 
-        // 1. Renderizado de Catálogo
+        // 1. Render Catálogo
         const itemsValidos = inventarioData.filter(fila => {
           const stock = parseInt(fila.stock || 0, 10);
           const nombre = (fila.nombre || '').trim();
           return !isNaN(stock) && stock > 0 && nombre.length > 0;
         });
 
-        totalProductos = itemsValidos.length;
-        contadorEl.textContent = `${totalProductos} items`;
-
-        if (totalProductos === 0) {
+        if (itemsValidos.length === 0) {
           emptyCatalogo.style.display = 'block';
         } else {
           const categoriasMap = {};
@@ -501,17 +674,19 @@
 
           const listaCategorias = Object.keys(categoriasMap);
 
+          // Categorías navegables
           navEl.innerHTML = '';
           listaCategorias.forEach(cat => {
             const catId = sanitizeId(cat);
             const btn = document.createElement('a');
             btn.className = 'cat-btn';
             btn.href = `#${catId}`;
-            btn.textContent = cat;
+            btn.innerHTML = `${getCategoryIcon(cat)} <span>${cat}</span>`;
             navEl.appendChild(btn);
           });
-          navEl.style.display = 'flex';
+          wrapperNav.style.display = 'block';
 
+          // Secciones de categorías y tarjetas
           contenedorEl.innerHTML = '';
           listaCategorias.forEach(cat => {
             const catId = sanitizeId(cat);
@@ -522,7 +697,9 @@
             seccion.id = catId;
             seccion.innerHTML = `
               <div class="category-header">
-                <h2 class="category-title">${cat}</h2>
+                <div class="category-title-wrap">
+                  <h2 class="category-title">${cat}</h2>
+                </div>
                 <span class="category-count">${productos.length}</span>
               </div>
               <div class="grid" id="grid-${catId}"></div>
@@ -530,13 +707,40 @@
 
             const grid = seccion.querySelector(`#grid-${catId}`);
             productos.forEach(prod => {
+              const stockNum = parseInt(prod.stock, 10);
+              
+              // Rediseño de stock: distinción visual para última unidad vs stock regular
+              let stockHTML = '';
+              if (stockNum === 1) {
+                stockHTML = `
+                  <div class="stock-indicator stock-low" title="Stock validado">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <span>¡Última unidad!</span>
+                  </div>
+                `;
+              } else {
+                stockHTML = `
+                  <div class="stock-indicator stock-normal" title="Stock verificado">
+                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>${stockNum} disponibles</span>
+                  </div>
+                `;
+              }
+
+              const precioStr = String(prod.precio || '-').replace(/S\/\.?/gi, '').trim();
+
               const card = document.createElement('div');
               card.className = 'card';
               card.innerHTML = `
-                <div class="product-name">${prod.nombre}</div>
+                <div>
+                  <div class="product-name">${prod.nombre}</div>
+                  ${stockHTML}
+                </div>
                 <div class="card-footer">
-                  <span class="stock-pill">${prod.stock}<span class="stock-unit">u</span></span>
-                  <span class="product-price">${prod.precio || '-'}</span>
+                  <div>
+                    <div class="price-label">Precio</div>
+                    <div class="product-price"><span class="currency-symbol">S/</span>${precioStr}</div>
+                  </div>
                 </div>
               `;
               grid.appendChild(card);
@@ -546,7 +750,7 @@
           });
         }
 
-        // 2. Renderizado de Leaderboard con empates y top 3 estilizado
+        // 2. Render Leaderboard con empates y top 3 estilizado
         const ranking = (leaderboardData || [])
           .map(r => {
             const valRaw = r.consumo || r.precio || r.total || r.saldo || '';
@@ -558,36 +762,46 @@
           .filter(r => r.nombre.length > 0)
           .sort((a, b) => b.consumo - a.consumo);
 
-        totalClientes = ranking.length;
-        leaderboardCount.textContent = `${totalClientes} clientes`;
+        leaderboardCount.textContent = `${ranking.length} clientes`;
 
-        if (totalClientes === 0) {
+        if (ranking.length === 0) {
           emptyLeaderboard.style.display = 'block';
         } else {
           leaderboardBody.innerHTML = '';
-
-          let posicionActual = 1;
-          let ultimoConsumo = null;
+          let posActual = 1;
+          let ultimoMonto = null;
 
           ranking.forEach((entry, idx) => {
-            // Lógica de empate: si tiene el mismo consumo, comparte la posición
-            if (idx > 0 && entry.consumo === ultimoConsumo) {
-              // Mantiene posicionActual
+            if (idx > 0 && entry.consumo === ultimoMonto) {
+              // Empate mantiene el número de posición
             } else {
-              posicionActual = idx + 1;
+              posActual = idx + 1;
             }
-            ultimoConsumo = entry.consumo;
+            ultimoMonto = entry.consumo;
 
             let filaClase = '';
-            if (posicionActual === 1) filaClase = 'row-top-1';
-            else if (posicionActual === 2) filaClase = 'row-top-2';
-            else if (posicionActual === 3) filaClase = 'row-top-3';
+            let medalIcon = '';
+
+            if (posActual === 1) {
+              filaClase = 'row-top-1';
+              medalIcon = `<svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>`;
+            } else if (posActual === 2) {
+              filaClase = 'row-top-2';
+              medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
+            } else if (posActual === 3) {
+              filaClase = 'row-top-3';
+              medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
+            }
 
             const tr = document.createElement('tr');
             if (filaClase) tr.className = filaClase;
 
             tr.innerHTML = `
-              <td class="rank-cell">#${posicionActual}</td>
+              <td>
+                <div class="rank-cell">
+                  ${medalIcon} #${posActual}
+                </div>
+              </td>
               <td class="leaderboard-name">${entry.nombre}</td>
               <td class="leaderboard-amount">S/ ${entry.consumo.toFixed(2)}</td>
             `;
