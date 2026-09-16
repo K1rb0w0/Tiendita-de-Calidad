@@ -9,7 +9,6 @@
       --bg: #0f0d10;
       --card-bg: #181417;
       --card-bg-hover: #211a1f;
-      --card-inner: #130f12;
       --border: #2f2328;
       --border-accent: #8b2635;
       --text-main: #f5f0f2;
@@ -53,7 +52,6 @@
       max-width: 1300px;
     }
 
-    /* HEADER */
     header {
       margin-bottom: 1.2rem;
       padding-bottom: 0.75rem;
@@ -133,7 +131,6 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
-    /* CONTENEDOR DE CATEGORÍAS */
     .nav-wrapper {
       position: sticky;
       top: 0;
@@ -181,6 +178,7 @@
     .nav-categories::-webkit-scrollbar {
       height: 4px;
     }
+
     .nav-categories::-webkit-scrollbar-thumb {
       background: var(--border-accent);
       border-radius: 4px;
@@ -220,11 +218,11 @@
     .view-content {
       display: none;
     }
+
     .view-content.active {
       display: block;
     }
 
-    /* SECCIÓN DE PRODUCTOS */
     .section-category {
       margin-bottom: 1.8rem;
       scroll-margin-top: 85px;
@@ -237,12 +235,6 @@
       margin-bottom: 0.75rem;
       padding-bottom: 0.35rem;
       border-bottom: 1px solid var(--border);
-    }
-
-    .category-title-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
 
     .category-title {
@@ -262,7 +254,6 @@
       border-radius: 10px;
     }
 
-    /* CUADRÍCULA DE PRODUCTOS */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
@@ -316,7 +307,6 @@
       margin-bottom: 0.65rem;
     }
 
-    /* BADGES DE STOCK */
     .stock-indicator {
       display: flex;
       align-items: center;
@@ -380,7 +370,6 @@
       margin-right: 2px;
     }
 
-    /* LEADERBOARD */
     .leaderboard-container {
       max-width: 600px;
       margin: 0.5rem auto 2rem auto;
@@ -458,7 +447,6 @@
       font-size: 0.95rem;
     }
 
-    /* TOP 3 RANKING */
     .row-top-1 {
       background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, var(--card-bg) 100%) !important;
     }
@@ -515,14 +503,11 @@
 
     <div id="loading" class="state-msg">Cargando datos verificados...</div>
 
-    <!-- PESTAÑA CATÁLOGO -->
     <main id="vista-catalogo" class="view-content active">
       <div class="nav-wrapper" id="wrapper-nav" style="display: none;">
         <div class="scroll-hint-bar">
           <span>CATEGORÍAS</span>
-          <span class="scroll-hint-icon">
-            desliza para explorar &rarr;
-          </span>
+          <span class="scroll-hint-icon">desliza para explorar &rarr;</span>
         </div>
         <nav id="nav-categorias" class="nav-categories"></nav>
       </div>
@@ -531,13 +516,10 @@
       <div id="empty-catalogo" class="state-msg" style="display: none;">No hay productos con stock disponibles.</div>
     </main>
 
-    <!-- PESTAÑA LEADERBOARD -->
     <main id="vista-leaderboard" class="view-content">
       <div class="leaderboard-container">
         <div class="category-header">
-          <div class="category-title-wrap">
-            <h2 id="leaderboard-titulo" class="category-title">Ranking de clientes</h2>
-          </div>
+          <h2 id="leaderboard-titulo" class="category-title">Ranking de clientes</h2>
           <span id="leaderboard-count" class="category-count">0 registrados</span>
         </div>
         <table class="leaderboard-table">
@@ -560,23 +542,20 @@
     const CSV_INVENTARIO_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=0&single=true&output=csv';
     const CSV_LEADERBOARD_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTng6-nhK011yxjpHwNRUKvAufE1rRzDmwQB2qKA1UAASIPnV0rX3EzbDO5-ybS_v1OZoys-n9ynTmE/pub?gid=2073725424&single=true&output=csv';
 
-    // Genera el título dinámico: "Ranking de clientes [Mes] [Año]"
     function configurarTituloFechaLeaderboard() {
-      const fechaActual = new Date();
-      const meses = [
-        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-        'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'
-      ];
-      const mesActual = meses[fechaActual.getMonth()];
-      const anioActual = fechaActual.getFullYear();
+      const fecha = new Date();
+      const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       const tituloEl = document.getElementById('leaderboard-titulo');
       if (tituloEl) {
-        tituloEl.textContent = `Ranking de clientes ${mesActual} ${anioActual}`;
+        tituloEl.textContent = `Ranking de clientes ${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
       }
     }
 
     function getCategoryIcon(catName) {
       const c = catName.toLowerCase();
+      if (c.includes('chocolate')) {
+        return `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>`;
+      }
       if (c.includes('galleta')) {
         return `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="8.5" cy="8.5" r="1.5"></circle><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="10" cy="14" r="1"></circle><circle cx="14.5" cy="14.5" r="1.5"></circle></svg>`;
       }
@@ -593,47 +572,25 @@
     }
 
     function sanitizeId(text) {
-      return 'cat-' + text.toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9]/g, '-');
+      return 'cat-' + text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '-');
     }
 
     function normalizarHeader(h) {
-      return h.trim()
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
+      return h.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
     function parseConsumo(valorRaw) {
       if (!valorRaw) return 0;
-      const str = String(valorRaw)
-        .replace(/S\/\.?/gi, '')
-        .replace(/[$€]/g, '')
-        .replace(/\s+/g, '')
-        .replace(',', '.');
-      const num = parseFloat(str);
+      const num = parseFloat(String(valorRaw).replace(/S\/\.?/gi, '').replace(/[$€]/g, '').replace(/\s+/g, '').replace(',', '.'));
       return isNaN(num) ? 0 : num;
     }
 
     function cambiarPestana(pestana) {
-      const btnCat = document.getElementById('btn-tab-catalogo');
-      const btnLead = document.getElementById('btn-tab-leaderboard');
-      const vistaCat = document.getElementById('vista-catalogo');
-      const vistaLead = document.getElementById('vista-leaderboard');
-
-      if (pestana === 'catalogo') {
-        btnCat.classList.add('active');
-        btnLead.classList.remove('active');
-        vistaCat.classList.add('active');
-        vistaLead.classList.remove('active');
-      } else {
-        btnLead.classList.add('active');
-        btnCat.classList.remove('active');
-        vistaLead.classList.add('active');
-        vistaCat.classList.remove('active');
-      }
+      const esCat = pestana === 'catalogo';
+      document.getElementById('btn-tab-catalogo').classList.toggle('active', esCat);
+      document.getElementById('btn-tab-leaderboard').classList.toggle('active', !esCat);
+      document.getElementById('vista-catalogo').classList.toggle('active', esCat);
+      document.getElementById('vista-leaderboard').classList.toggle('active', !esCat);
     }
 
     async function cargarCSV(url) {
@@ -670,11 +627,11 @@
 
         loadingEl.style.display = 'none';
 
-        // 1. Render Catálogo
         const itemsValidos = inventarioData.filter(fila => {
           const stock = parseInt(fila.stock || 0, 10);
           const nombre = (fila.nombre || '').trim();
-          return !isNaN(stock) && stock > 0 && nombre.length > 0;
+          const categoria = (fila.categoria || '').trim().toLowerCase();
+          return !isNaN(stock) && stock > 0 && nombre.length > 0 && categoria !== 'otros';
         });
 
         if (itemsValidos.length === 0) {
@@ -682,96 +639,61 @@
         } else {
           const categoriasMap = {};
           itemsValidos.forEach(item => {
-            const catRaw = (item.categoria || '').trim();
-            const categoria = catRaw.length > 0 ? catRaw : 'Otros';
+            const categoria = (item.categoria || '').trim() || 'Chocolates';
             if (!categoriasMap[categoria]) categoriasMap[categoria] = [];
             categoriasMap[categoria].push(item);
           });
 
           const listaCategorias = Object.keys(categoriasMap);
 
-          navEl.innerHTML = '';
-          listaCategorias.forEach(cat => {
+          navEl.innerHTML = listaCategorias.map(cat => {
             const catId = sanitizeId(cat);
-            const btn = document.createElement('a');
-            btn.className = 'cat-btn';
-            btn.href = `#${catId}`;
-            btn.innerHTML = `${getCategoryIcon(cat)} <span>${cat}</span>`;
-            navEl.appendChild(btn);
-          });
+            return `<a class="cat-btn" href="#${catId}">${getCategoryIcon(cat)} <span>${cat}</span></a>`;
+          }).join('');
           wrapperNav.style.display = 'block';
 
-          contenedorEl.innerHTML = '';
-          listaCategorias.forEach(cat => {
+          contenedorEl.innerHTML = listaCategorias.map(cat => {
             const catId = sanitizeId(cat);
             const productos = categoriasMap[cat];
-
-            const seccion = document.createElement('section');
-            seccion.className = 'section-category';
-            seccion.id = catId;
-            seccion.innerHTML = `
-              <div class="category-header">
-                <div class="category-title-wrap">
-                  <h2 class="category-title">${cat}</h2>
-                </div>
-                <span class="category-count">${productos.length}</span>
-              </div>
-              <div class="grid" id="grid-${catId}"></div>
-            `;
-
-            const grid = seccion.querySelector(`#grid-${catId}`);
-            productos.forEach(prod => {
+            
+            const tarjetas = productos.map(prod => {
               const stockNum = parseInt(prod.stock, 10);
-              
-              let stockHTML = '';
-              if (stockNum === 1) {
-                stockHTML = `
-                  <div class="stock-indicator stock-low" title="Stock validado">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                    <span>¡Última unidad!</span>
-                  </div>
-                `;
-              } else {
-                stockHTML = `
-                  <div class="stock-indicator stock-normal" title="Stock verificado">
-                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    <span>${stockNum} disponibles</span>
-                  </div>
-                `;
-              }
-
               const precioStr = String(prod.precio || '-').replace(/S\/\.?/gi, '').trim();
+              const stockHTML = stockNum === 1
+                ? `<div class="stock-indicator stock-low"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span>¡Última unidad!</span></div>`
+                : `<div class="stock-indicator stock-normal"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg><span>${stockNum} disponibles</span></div>`;
 
-              const card = document.createElement('div');
-              card.className = 'card';
-              card.innerHTML = `
-                <div>
-                  <div class="product-name">${prod.nombre}</div>
-                  ${stockHTML}
-                </div>
-                <div class="card-footer">
+              return `
+                <div class="card">
                   <div>
-                    <div class="price-label">Precio</div>
-                    <div class="product-price"><span class="currency-symbol">S/</span>${precioStr}</div>
+                    <div class="product-name">${prod.nombre}</div>
+                    ${stockHTML}
                   </div>
-                </div>
-              `;
-              grid.appendChild(card);
-            });
+                  <div class="card-footer">
+                    <div>
+                      <div class="price-label">Precio</div>
+                      <div class="product-price"><span class="currency-symbol">S/</span>${precioStr}</div>
+                    </div>
+                  </div>
+                </div>`;
+            }).join('');
 
-            contenedorEl.appendChild(seccion);
-          });
+            return `
+              <section class="section-category" id="${catId}">
+                <div class="category-header">
+                  <h2 class="category-title">${cat}</h2>
+                  <span class="category-count">${productos.length}</span>
+                </div>
+                <div class="grid">${tarjetas}</div>
+              </section>`;
+          }).join('');
         }
 
-        // 2. Render Leaderboard
         const ranking = (leaderboardData || [])
-          .map(r => {
-            const valRaw = r.consumo || r.precio || r.total || r.saldo || '';
-            return {
-              nombre: (r.nombre || '').trim(),
-              consumo: parseConsumo(valRaw)
-            };
-          })
+          .map(r => ({
+            nombre: (r.nombre || '').trim(),
+            consumo: parseConsumo(r.consumo || r.precio || r.total || r.saldo || '')
+          }))
           .filter(r => r.nombre.length > 0)
           .sort((a, b) => b.consumo - a.consumo);
 
@@ -780,14 +702,11 @@
         if (ranking.length === 0) {
           emptyLeaderboard.style.display = 'block';
         } else {
-          leaderboardBody.innerHTML = '';
           let posActual = 1;
           let ultimoMonto = null;
 
-          ranking.forEach((entry, idx) => {
-            if (idx > 0 && entry.consumo === ultimoMonto) {
-              // Empate
-            } else {
+          leaderboardBody.innerHTML = ranking.map((entry, idx) => {
+            if (idx > 0 && entry.consumo !== ultimoMonto) {
               posActual = idx + 1;
             }
             ultimoMonto = entry.consumo;
@@ -796,35 +715,31 @@
             let medalIcon = '';
 
             if (posActual === 1) {
-              filaClase = 'row-top-1';
+              filaClase = 'class="row-top-1"';
               medalIcon = `<svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>`;
             } else if (posActual === 2) {
-              filaClase = 'row-top-2';
+              filaClase = 'class="row-top-2"';
               medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
             } else if (posActual === 3) {
-              filaClase = 'row-top-3';
+              filaClase = 'class="row-top-3"';
               medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
             }
 
-            const tr = document.createElement('tr');
-            if (filaClase) tr.className = filaClase;
-
-            tr.innerHTML = `
-              <td>
-                <div class="rank-cell">
-                  ${medalIcon} #${posActual}
-                </div>
-              </td>
-              <td class="leaderboard-name">${entry.nombre}</td>
-              <td class="leaderboard-amount">S/ ${entry.consumo.toFixed(2)}</td>
-            `;
-            leaderboardBody.appendChild(tr);
-          });
+            return `
+              <tr ${filaClase}>
+                <td>
+                  <div class="rank-cell">
+                    ${medalIcon} #${posActual}
+                  </div>
+                </td>
+                <td class="leaderboard-name">${entry.nombre}</td>
+                <td class="leaderboard-amount">S/ ${entry.consumo.toFixed(2)}</td>
+              </tr>`;
+          }).join('');
         }
 
       } catch (err) {
         loadingEl.textContent = 'Error al cargar los datos.';
-        console.error(err);
       }
     }
 
