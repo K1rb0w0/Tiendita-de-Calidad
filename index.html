@@ -23,6 +23,7 @@
       --accent-gold: #f59e0b;
       --accent-silver: #cbd5e1;
       --accent-bronze: #d97706;
+      --nice-pink: #f472b6;
       --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
@@ -47,10 +48,7 @@
       min-height: 100vh;
     }
 
-    .container {
-      width: 100%;
-      max-width: 1300px;
-    }
+    .container { width: 100%; max-width: 1300px; }
 
     header {
       margin-bottom: 1.2rem;
@@ -61,11 +59,7 @@
       justify-content: space-between;
     }
 
-    .brand-title {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
+    .brand-title { display: flex; align-items: center; gap: 0.6rem; }
 
     .brand-icon {
       width: 28px;
@@ -78,13 +72,7 @@
       box-shadow: 0 0 12px var(--accent-glow);
     }
 
-    .brand-icon svg {
-      width: 16px;
-      height: 16px;
-      fill: none;
-      stroke: #fff;
-      stroke-width: 2.2;
-    }
+    .brand-icon svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2.2; }
 
     .main-tabs {
       display: flex;
@@ -112,18 +100,8 @@
       transition: all 0.2s ease;
     }
 
-    .main-tab-btn svg {
-      width: 15px;
-      height: 15px;
-      stroke-width: 2;
-      stroke: currentColor;
-      fill: none;
-    }
-
-    .main-tab-btn:hover {
-      color: var(--text-main);
-    }
-
+    .main-tab-btn svg { width: 15px; height: 15px; stroke-width: 2; stroke: currentColor; fill: none; }
+    .main-tab-btn:hover { color: var(--text-main); }
     .main-tab-btn.active {
       background: linear-gradient(135deg, #2b1f24, #1f171b);
       border: 1px solid var(--border-accent);
@@ -161,10 +139,7 @@
       animation: pulseText 2s infinite ease-in-out;
     }
 
-    @keyframes pulseText {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; transform: translateX(2px); }
-    }
+    @keyframes pulseText { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; transform: translateX(2px); } }
 
     .nav-categories {
       display: flex;
@@ -175,14 +150,8 @@
       scrollbar-color: var(--border-accent) transparent;
     }
 
-    .nav-categories::-webkit-scrollbar {
-      height: 4px;
-    }
-
-    .nav-categories::-webkit-scrollbar-thumb {
-      background: var(--border-accent);
-      border-radius: 4px;
-    }
+    .nav-categories::-webkit-scrollbar { height: 4px; }
+    .nav-categories::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 4px; }
 
     .cat-btn {
       font-size: 0.76rem;
@@ -200,33 +169,13 @@
       transition: all 0.2s ease;
     }
 
-    .cat-btn svg {
-      width: 13px;
-      height: 13px;
-      stroke: currentColor;
-      stroke-width: 2;
-      fill: none;
-    }
+    .cat-btn svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 2; fill: none; }
+    .cat-btn:hover { color: #fff; border-color: var(--accent); background: var(--card-bg-hover); transform: translateY(-1px); }
 
-    .cat-btn:hover {
-      color: #fff;
-      border-color: var(--accent);
-      background: var(--card-bg-hover);
-      transform: translateY(-1px);
-    }
+    .view-content { display: none; }
+    .view-content.active { display: block; }
 
-    .view-content {
-      display: none;
-    }
-
-    .view-content.active {
-      display: block;
-    }
-
-    .section-category {
-      margin-bottom: 1.8rem;
-      scroll-margin-top: 85px;
-    }
+    .section-category { margin-bottom: 1.8rem; scroll-margin-top: 85px; }
 
     .category-header {
       display: flex;
@@ -237,12 +186,7 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .category-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.01em;
-    }
+    .category-title { font-size: 0.95rem; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
 
     .category-count {
       font-family: var(--font-mono);
@@ -254,11 +198,7 @@
       border-radius: 10px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
-      gap: 0.75rem;
-    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 0.75rem; }
 
     .card {
       background: var(--card-bg);
@@ -276,208 +216,68 @@
     }
 
     .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0;
-      transition: opacity 0.2s ease;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity 0.2s ease;
     }
 
-    .card:hover {
-      background: var(--card-bg-hover);
-      border-color: var(--border-accent);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
-    }
+    .card:hover { background: var(--card-bg-hover); border-color: var(--border-accent); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45); }
+    .card:hover::before { opacity: 1; }
 
-    .card:hover::before {
-      opacity: 1;
-    }
-
-    .product-name {
-      font-size: 0.86rem;
-      font-weight: 600;
-      line-height: 1.3;
-      color: var(--text-main);
-      word-break: break-word;
-      margin-bottom: 0.65rem;
-    }
+    .product-name { font-size: 0.86rem; font-weight: 600; line-height: 1.3; color: var(--text-main); word-break: break-word; margin-bottom: 0.65rem; }
 
     .stock-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      font-weight: 600;
-      padding: 0.2rem 0.45rem;
-      border-radius: 4px;
-      width: fit-content;
-      margin-bottom: 0.65rem;
+      display: flex; align-items: center; gap: 0.35rem; font-family: var(--font-mono);
+      font-size: 0.68rem; font-weight: 600; padding: 0.2rem 0.45rem; border-radius: 4px;
+      width: fit-content; margin-bottom: 0.65rem;
     }
 
-    .stock-normal {
-      background: var(--pass-soft);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: var(--pass-green);
-    }
+    .stock-normal { background: var(--pass-soft); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--pass-green); }
+    .stock-low { background: var(--alert-soft); border: 1px solid rgba(245, 158, 11, 0.35); color: var(--alert-orange); }
+    .stock-indicator svg { width: 11px; height: 11px; stroke-width: 2.5; stroke: currentColor; fill: none; }
 
-    .stock-low {
-      background: var(--alert-soft);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      color: var(--alert-orange);
-    }
+    .card-footer { display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 0.45rem; }
+    .price-label { font-size: 0.62rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 0.1rem; }
+    .product-price { font-family: var(--font-mono); font-size: 1.05rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .currency-symbol { color: var(--accent); font-size: 0.78rem; margin-right: 2px; }
 
-    .stock-indicator svg {
-      width: 11px;
-      height: 11px;
-      stroke-width: 2.5;
-      stroke: currentColor;
-      fill: none;
-    }
+    .leaderboard-container { max-width: 650px; margin: 0.5rem auto 2rem auto; }
+    .leaderboard-table { width: 100%; border-collapse: separate; border-spacing: 0 0.4rem; margin-top: 0.8rem; font-size: 0.86rem; }
+    .leaderboard-table th { text-align: left; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); padding: 0.4rem 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    
+    .leaderboard-table tbody tr { background: var(--card-bg); box-shadow: 0 2px 6px rgba(0,0,0,0.25); transition: all 0.15s ease; }
+    .leaderboard-table tbody tr td { padding: 0.65rem 0.8rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .leaderboard-table tbody tr td:first-child { border-left: 1px solid var(--border); border-top-left-radius: 6px; border-bottom-left-radius: 6px; }
+    .leaderboard-table tbody tr td:last-child { border-right: 1px solid var(--border); border-top-right-radius: 6px; border-bottom-right-radius: 6px; }
 
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding-top: 0.45rem;
-    }
+    .rank-cell { width: 55px; font-family: var(--font-mono); font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 0.35rem; color: var(--text-muted); }
+    .rank-cell svg { width: 14px; height: 14px; fill: currentColor; }
+    .leaderboard-name { font-weight: 600; color: #fff; }
+    .leaderboard-amount { text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--accent); font-size: 0.95rem; }
 
-    .price-label {
-      font-size: 0.62rem;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      text-transform: uppercase;
-      margin-bottom: 0.1rem;
+    /* ESTILOS DEL MEME 69 */
+    .amount-wrap { display: flex; align-items: center; justify-content: flex-end; gap: 0.4rem; }
+    .nice-badge {
+      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 800; color: var(--nice-pink);
+      background: rgba(244, 114, 182, 0.15); border: 1px solid rgba(244, 114, 182, 0.4);
+      padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;
+      box-shadow: 0 0 6px rgba(244, 114, 182, 0.3);
     }
+    .base-69 { color: var(--nice-pink); font-size: 1.05rem; text-shadow: 0 0 5px rgba(244, 114, 182, 0.4); }
+    .resto-69 { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
 
-    .product-price {
-      font-family: var(--font-mono);
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.02em;
-    }
-
-    .currency-symbol {
-      color: var(--accent);
-      font-size: 0.78rem;
-      margin-right: 2px;
-    }
-
-    .leaderboard-container {
-      max-width: 600px;
-      margin: 0.5rem auto 2rem auto;
-    }
-
-    .leaderboard-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 0.4rem;
-      margin-top: 0.8rem;
-      font-size: 0.86rem;
-    }
-
-    .leaderboard-table th {
-      text-align: left;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      padding: 0.4rem 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .leaderboard-table tbody tr {
-      background: var(--card-bg);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-      transition: all 0.15s ease;
-    }
-
-    .leaderboard-table tbody tr td {
-      padding: 0.65rem 0.8rem;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .leaderboard-table tbody tr td:first-child {
-      border-left: 1px solid var(--border);
-      border-top-left-radius: 6px;
-      border-bottom-left-radius: 6px;
-    }
-
-    .leaderboard-table tbody tr td:last-child {
-      border-right: 1px solid var(--border);
-      border-top-right-radius: 6px;
-      border-bottom-right-radius: 6px;
-    }
-
-    .rank-cell {
-      width: 55px;
-      font-family: var(--font-mono);
-      font-weight: 800;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      color: var(--text-muted);
-    }
-
-    .rank-cell svg {
-      width: 14px;
-      height: 14px;
-      fill: currentColor;
-    }
-
-    .leaderboard-name {
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .leaderboard-amount {
-      text-align: right;
-      font-family: var(--font-mono);
-      font-weight: 800;
-      color: var(--accent);
-      font-size: 0.95rem;
-    }
-
-    .row-top-1 {
-      background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, var(--card-bg) 100%) !important;
-    }
-    .row-top-1 td:first-child {
-      border-left: 3px solid var(--accent-gold) !important;
-    }
+    .row-top-1 { background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, var(--card-bg) 100%) !important; }
+    .row-top-1 td:first-child { border-left: 3px solid var(--accent-gold) !important; }
     .row-top-1 .rank-cell { color: var(--accent-gold); }
 
-    .row-top-2 {
-      background: linear-gradient(90deg, rgba(203, 213, 225, 0.1) 0%, var(--card-bg) 100%) !important;
-    }
-    .row-top-2 td:first-child {
-      border-left: 3px solid var(--accent-silver) !important;
-    }
+    .row-top-2 { background: linear-gradient(90deg, rgba(203, 213, 225, 0.1) 0%, var(--card-bg) 100%) !important; }
+    .row-top-2 td:first-child { border-left: 3px solid var(--accent-silver) !important; }
     .row-top-2 .rank-cell { color: var(--accent-silver); }
 
-    .row-top-3 {
-      background: linear-gradient(90deg, rgba(217, 119, 6, 0.1) 0%, var(--card-bg) 100%) !important;
-    }
-    .row-top-3 td:first-child {
-      border-left: 3px solid var(--accent-bronze) !important;
-    }
+    .row-top-3 { background: linear-gradient(90deg, rgba(217, 119, 6, 0.1) 0%, var(--card-bg) 100%) !important; }
+    .row-top-3 td:first-child { border-left: 3px solid var(--accent-bronze) !important; }
     .row-top-3 .rank-cell { color: var(--accent-bronze); }
 
-    .state-msg {
-      text-align: center;
-      padding: 3rem 1rem;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
+    .state-msg { text-align: center; padding: 3rem 1rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -485,17 +285,13 @@
   <div class="container">
     <header>
       <div class="brand-title">
-        <div class="brand-icon">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
+        <div class="brand-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
         <nav class="main-tabs">
           <button id="btn-tab-catalogo" class="main-tab-btn active" onclick="cambiarPestana('catalogo')">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            Catálogo
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> Catálogo
           </button>
           <button id="btn-tab-leaderboard" class="main-tab-btn" onclick="cambiarPestana('leaderboard')">
-            <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7"></path><path d="M14 14.66V17c0 .55.45 1 1 1h2"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
-            Leaderboard
+            <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7"></path><path d="M14 14.66V17c0 .55.45 1 1 1h2"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> Leaderboard
           </button>
         </nav>
       </div>
@@ -511,7 +307,6 @@
         </div>
         <nav id="nav-categorias" class="nav-categories"></nav>
       </div>
-
       <div id="contenedor-categorias"></div>
       <div id="empty-catalogo" class="state-msg" style="display: none;">No hay productos con stock disponibles.</div>
     </main>
@@ -546,39 +341,21 @@
       const fecha = new Date();
       const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       const tituloEl = document.getElementById('leaderboard-titulo');
-      if (tituloEl) {
-        tituloEl.textContent = `Ranking de clientes ${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
-      }
+      if (tituloEl) tituloEl.textContent = `Ranking de clientes ${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
     }
 
     function getCategoryIcon(catName) {
       const c = catName.toLowerCase();
-      if (c.includes('chocolate')) {
-        return `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>`;
-      }
-      if (c.includes('galleta')) {
-        return `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="8.5" cy="8.5" r="1.5"></circle><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="10" cy="14" r="1"></circle><circle cx="14.5" cy="14.5" r="1.5"></circle></svg>`;
-      }
-      if (c.includes('bebida')) {
-        return `<svg viewBox="0 0 24 24"><path d="M18 2h-12a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-16a2 2 0 0 0-2-2z"></path><line x1="12" y1="6" x2="12" y2="10"></line><circle cx="12" cy="15" r="2"></circle></svg>`;
-      }
-      if (c.includes('dulce')) {
-        return `<svg viewBox="0 0 24 24"><path d="m16 8 5-5"></path><path d="m8 16-5 5"></path><circle cx="12" cy="12" r="6"></circle></svg>`;
-      }
-      if (c.includes('piqueo')) {
-        return `<svg viewBox="0 0 24 24"><polygon points="12 2 2 22 22 22 12 2"></polygon></svg>`;
-      }
+      if (c.includes('chocolate')) return `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>`;
+      if (c.includes('galleta')) return `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="8.5" cy="8.5" r="1.5"></circle><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="10" cy="14" r="1"></circle><circle cx="14.5" cy="14.5" r="1.5"></circle></svg>`;
+      if (c.includes('bebida')) return `<svg viewBox="0 0 24 24"><path d="M18 2h-12a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-16a2 2 0 0 0-2-2z"></path><line x1="12" y1="6" x2="12" y2="10"></line><circle cx="12" cy="15" r="2"></circle></svg>`;
+      if (c.includes('dulce')) return `<svg viewBox="0 0 24 24"><path d="m16 8 5-5"></path><path d="m8 16-5 5"></path><circle cx="12" cy="12" r="6"></circle></svg>`;
+      if (c.includes('piqueo')) return `<svg viewBox="0 0 24 24"><polygon points="12 2 2 22 22 22 12 2"></polygon></svg>`;
       return `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
     }
 
-    function sanitizeId(text) {
-      return 'cat-' + text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '-');
-    }
-
-    function normalizarHeader(h) {
-      return h.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    }
-
+    function sanitizeId(text) { return 'cat-' + text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '-'); }
+    function normalizarHeader(h) { return h.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
     function parseConsumo(valorRaw) {
       if (!valorRaw) return 0;
       const num = parseFloat(String(valorRaw).replace(/S\/\.?/gi, '').replace(/[$€]/g, '').replace(/\s+/g, '').replace(',', '.'));
@@ -597,13 +374,7 @@
       const resp = await fetch(url);
       const csv = await resp.text();
       return new Promise((resolve, reject) => {
-        Papa.parse(csv, {
-          header: true,
-          skipEmptyLines: true,
-          transformHeader: normalizarHeader,
-          complete: results => resolve(results.data),
-          error: reject
-        });
+        Papa.parse(csv, { header: true, skipEmptyLines: true, transformHeader: normalizarHeader, complete: results => resolve(results.data), error: reject });
       });
     }
 
@@ -645,18 +416,11 @@
           });
 
           const listaCategorias = Object.keys(categoriasMap);
-
-          navEl.innerHTML = listaCategorias.map(cat => {
-            const catId = sanitizeId(cat);
-            return `<a class="cat-btn" href="#${catId}">${getCategoryIcon(cat)} <span>${cat}</span></a>`;
-          }).join('');
+          navEl.innerHTML = listaCategorias.map(cat => `<a class="cat-btn" href="#${sanitizeId(cat)}">${getCategoryIcon(cat)} <span>${cat}</span></a>`).join('');
           wrapperNav.style.display = 'block';
 
           contenedorEl.innerHTML = listaCategorias.map(cat => {
-            const catId = sanitizeId(cat);
-            const productos = categoriasMap[cat];
-            
-            const tarjetas = productos.map(prod => {
+            const tarjetas = categoriasMap[cat].map(prod => {
               const stockNum = parseInt(prod.stock, 10);
               const precioStr = String(prod.precio || '-').replace(/S\/\.?/gi, '').trim();
               const stockHTML = stockNum === 1
@@ -679,10 +443,10 @@
             }).join('');
 
             return `
-              <section class="section-category" id="${catId}">
+              <section class="section-category" id="${sanitizeId(cat)}">
                 <div class="category-header">
                   <h2 class="category-title">${cat}</h2>
-                  <span class="category-count">${productos.length}</span>
+                  <span class="category-count">${categoriasMap[cat].length}</span>
                 </div>
                 <div class="grid">${tarjetas}</div>
               </section>`;
@@ -690,10 +454,7 @@
         }
 
         const ranking = (leaderboardData || [])
-          .map(r => ({
-            nombre: (r.nombre || '').trim(),
-            consumo: parseConsumo(r.consumo || r.precio || r.total || r.saldo || '')
-          }))
+          .map(r => ({ nombre: (r.nombre || '').trim(), consumo: parseConsumo(r.consumo || r.precio || r.total || r.saldo || '') }))
           .filter(r => r.nombre.length > 0)
           .sort((a, b) => b.consumo - a.consumo);
 
@@ -706,41 +467,36 @@
           let ultimoMonto = null;
 
           leaderboardBody.innerHTML = ranking.map((entry, idx) => {
-            if (idx > 0 && entry.consumo !== ultimoMonto) {
-              posActual = idx + 1;
-            }
+            if (idx > 0 && entry.consumo !== ultimoMonto) posActual = idx + 1;
             ultimoMonto = entry.consumo;
 
             let filaClase = '';
             let medalIcon = '';
 
-            if (posActual === 1) {
-              filaClase = 'class="row-top-1"';
-              medalIcon = `<svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>`;
-            } else if (posActual === 2) {
-              filaClase = 'class="row-top-2"';
-              medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
-            } else if (posActual === 3) {
-              filaClase = 'class="row-top-3"';
-              medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
+            if (posActual === 1) { filaClase = 'class="row-top-1"'; medalIcon = `<svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>`; }
+            else if (posActual === 2) { filaClase = 'class="row-top-2"'; medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`; }
+            else if (posActual === 3) { filaClase = 'class="row-top-3"'; medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`; }
+
+            // Lógica para el meme del 69
+            let consumoHTML = `S/ ${entry.consumo.toFixed(2)}`;
+            if (entry.consumo >= 69) {
+              const resto = entry.consumo - 69;
+              consumoHTML = `
+                <div class="amount-wrap">
+                  <span class="nice-badge">[STATUS: NICE] ( ͡° ͜ʖ ͡°)</span>
+                  <span>S/ <span class="base-69">69</span>${resto > 0 ? `<span class="resto-69"> + ${resto.toFixed(2)}</span>` : `<span class="resto-69">.00</span>`}</span>
+                </div>`;
             }
 
             return `
               <tr ${filaClase}>
-                <td>
-                  <div class="rank-cell">
-                    ${medalIcon} #${posActual}
-                  </div>
-                </td>
+                <td><div class="rank-cell">${medalIcon} #${posActual}</div></td>
                 <td class="leaderboard-name">${entry.nombre}</td>
-                <td class="leaderboard-amount">S/ ${entry.consumo.toFixed(2)}</td>
+                <td class="leaderboard-amount">${consumoHTML}</td>
               </tr>`;
           }).join('');
         }
-
-      } catch (err) {
-        loadingEl.textContent = 'Error al cargar los datos.';
-      }
+      } catch (err) { loadingEl.textContent = 'Error al cargar los datos.'; }
     }
 
     inicializar();
