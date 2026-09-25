@@ -254,24 +254,49 @@
     .leaderboard-name { font-weight: 600; color: #fff; }
     .leaderboard-amount { text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--accent); font-size: 0.95rem; }
 
-    /* ESTILOS DEL MEME 69 - Modificados en columna */
+    /* ESTILOS DEL MEME 69 - Ajustados para evitar espacios sobrantes */
     .amount-wrap { 
       display: flex; 
       flex-direction: column; 
       align-items: flex-end; 
-      gap: 0.25rem; 
+      gap: 0.35rem; 
     }
     
     .nice-badge {
-      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 800; color: var(--nice-pink);
+      font-size: 0.65rem; font-weight: 800; color: var(--nice-pink);
       background: rgba(244, 114, 182, 0.15); border: 1px solid rgba(244, 114, 182, 0.4);
-      padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;
+      padding: 0.2rem 0.45rem; border-radius: 4px;
       box-shadow: 0 0 6px rgba(244, 114, 182, 0.3);
-      white-space: nowrap; /* Evita que el texto se rompa o comprima */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: max-content;
+      line-height: 1;
+    }
+
+    .nice-text {
+      font-family: var(--font-mono); 
+      text-transform: uppercase; 
+      letter-spacing: 0.05em;
+    }
+
+    .lenny-face {
+      font-family: var(--font-sans);
+      letter-spacing: normal;
+      margin-left: 0.3rem;
+      white-space: nowrap;
     }
     
     .base-69 { color: var(--nice-pink); font-size: 1.05rem; text-shadow: 0 0 5px rgba(244, 114, 182, 0.4); }
-    .resto-69 { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+    
+    /* Nuevo estilo para el excedente: Más brillante y notorio */
+    .resto-69 { 
+      font-size: 0.88rem; 
+      color: #fce7f3; 
+      font-weight: 800; 
+      text-shadow: 0 0 4px rgba(252, 231, 243, 0.4);
+      margin-left: 0.15rem;
+    }
 
     .row-top-1 { background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, var(--card-bg) 100%) !important; }
     .row-top-1 td:first-child { border-left: 3px solid var(--accent-gold) !important; }
@@ -490,8 +515,11 @@
               const resto = entry.consumo - 69;
               consumoHTML = `
                 <div class="amount-wrap">
-                  <span class="nice-badge">NICE ( ͡° ͜ʖ ͡°)</span>
-                  <div>S/ <span class="base-69">69.00</span>${resto > 0 ? `<span class="resto-69"> + ${resto.toFixed(2)}</span>` : ``}</div>
+                  <div class="nice-badge">
+                    <span class="nice-text">NICE</span>
+                    <span class="lenny-face">( ͡° ͜ʖ ͡°)</span>
+                  </div>
+                  <div>S/ <span class="base-69">69.00</span>${resto > 0 ? `<span class="resto-69">+ ${resto.toFixed(2)}</span>` : ``}</div>
                 </div>`;
             }
 
