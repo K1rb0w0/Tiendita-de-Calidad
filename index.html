@@ -254,14 +254,22 @@
     .leaderboard-name { font-weight: 600; color: #fff; }
     .leaderboard-amount { text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--accent); font-size: 0.95rem; }
 
-    /* ESTILOS DEL MEME 69 */
-    .amount-wrap { display: flex; align-items: center; justify-content: flex-end; gap: 0.4rem; }
+    /* ESTILOS DEL MEME 69 - Modificados en columna */
+    .amount-wrap { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-end; 
+      gap: 0.25rem; 
+    }
+    
     .nice-badge {
       font-family: var(--font-mono); font-size: 0.65rem; font-weight: 800; color: var(--nice-pink);
       background: rgba(244, 114, 182, 0.15); border: 1px solid rgba(244, 114, 182, 0.4);
       padding: 0.15rem 0.4rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;
       box-shadow: 0 0 6px rgba(244, 114, 182, 0.3);
+      white-space: nowrap; /* Evita que el texto se rompa o comprima */
     }
+    
     .base-69 { color: var(--nice-pink); font-size: 1.05rem; text-shadow: 0 0 5px rgba(244, 114, 182, 0.4); }
     .resto-69 { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
 
@@ -477,14 +485,13 @@
             else if (posActual === 2) { filaClase = 'class="row-top-2"'; medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`; }
             else if (posActual === 3) { filaClase = 'class="row-top-3"'; medalIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`; }
 
-            // Lógica para el meme del 69
             let consumoHTML = `S/ ${entry.consumo.toFixed(2)}`;
             if (entry.consumo >= 69) {
               const resto = entry.consumo - 69;
               consumoHTML = `
                 <div class="amount-wrap">
-                  <span class="nice-badge">[STATUS: NICE] ( ͡° ͜ʖ ͡°)</span>
-                  <span>S/ <span class="base-69">69</span>${resto > 0 ? `<span class="resto-69"> + ${resto.toFixed(2)}</span>` : `<span class="resto-69">.00</span>`}</span>
+                  <span class="nice-badge">NICE ( ͡° ͜ʖ ͡°)</span>
+                  <div>S/ <span class="base-69">69.00</span>${resto > 0 ? `<span class="resto-69"> + ${resto.toFixed(2)}</span>` : ``}</div>
                 </div>`;
             }
 
